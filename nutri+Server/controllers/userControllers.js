@@ -16,17 +16,31 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
+
+
 export const createUser = async (req, res) => {
   console.log(req.body);
   try {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
+
+    // Check if user already exists
+    const existingUser =  await getUserByUsername(username);
+    if (existingUser) {
+      return res.status(409).json({ error: 'User already exists' });
+    }
+
+    // Create new user
     const hashedPassword = hashPassword(password);
-    const user = await createUserService({ username, password: hashedPassword, email: req.body.email });
-    serverResponse(res, 201, user);
+    const newUser = await createUserService({ username, password: hashedPassword, email });
+
+    // Respond with the newly created user
+    res.status(201).json(newUser);
   } catch (error) {
-    serverResponse(res, 500, error);
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 export const loginUser = async (req, res) => {
   try {

@@ -1,21 +1,15 @@
 // recipeRoutes.js
 
 import express from 'express';
-import {
-  getAllRecipesByUserController,
-  getRecipeByIdForUserController,
-  createRecipeForUserController,
-  deleteRecipeForUserController,
-  updateRecipeForUserController,
-} from '../controllers/recipeControllers.js';
+import { createRecipe, deleteRecipe, getAllRecipes, getRecipeById, updateRecipe } from '../controllers/recipeControllers.js';
 
 const router = express.Router();
 
 // Routes for recipes
-router.get('/:userId/recipes', getAllRecipesByUserController); // Get all recipes for a user
-router.get('/:userId/recipes/:recipeId', getRecipeByIdForUserController); // Get a recipe by ID for a user
-router.post('/:userId/recipes', createRecipeForUserController); // Create a new recipe for a user
-router.delete('/:userId/recipes/:recipeId', deleteRecipeForUserController); // Delete a recipe by ID for a user
-router.put('/:userId/recipes/:recipeId', updateRecipeForUserController); // Update a recipe by ID for a user
+router.get('/recipes', getAllRecipes); // Get all recipes for a user
+router.get('/recipes/:recipeId', getRecipeById); // Get a recipe by ID for a user
+router.post('/recipes', createRecipe); // Create a new recipe for a user
+router.delete('/recipes/:recipeId', deleteRecipe); // Delete a recipe by ID for a user
+router.put('/recipes/:recipeId', updateRecipe); // Update a recipe by ID for a user
 
 export default router;

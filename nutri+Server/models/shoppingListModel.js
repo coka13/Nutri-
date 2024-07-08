@@ -1,22 +1,18 @@
 import mongoose from "mongoose";
 
+
 const shoppingListSchema = new mongoose.Schema({
-  foodName: {
-    type: String,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-  },
-  unit: {
-    type: String,
-    required: true,
-    enum: ['piece', 'kg', 'liter', 'gram', 'milliliter'],
-  },
+  foodItems: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "FoodItem",
+  }],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
+  },
+  name: {
+    type: String,
     required: true,
   },
 });

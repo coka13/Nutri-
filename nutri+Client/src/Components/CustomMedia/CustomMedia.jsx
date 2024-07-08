@@ -16,14 +16,25 @@ function Media(props) {
   return (
     <Grid container spacing={2}> {/* Added spacing={2} for grid spacing */}
       {(loading ? Array.from(new Array(3)) : data).map((item, index) => (
-        <Grid item key={index} xs={6} sx={{display:"flex",justifyContent:"center"}}>
-          <Card sx={{ width: '250px', textAlign: 'center', cursor: 'pointer' }}>
+        <Grid item key={index} xs={6} sx={{ display: "flex", justifyContent: "center" }}>
+          <Card
+            sx={{
+              width: '250px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.3s ease-in-out', // Add transition for hover effect
+              '&:hover': {
+                transform: 'scale(1.05)', // Scale card on hover
+              },
+            }}
+          >
             {item ? (
               <Link
                 component={RouterLink} // Use RouterLink from react-router-dom
                 to={item.link} // Navigate to item.link
                 color="primary"
                 underline="hover"
+                sx={{ textDecoration: 'none' }} // Ensure no underline on hover
               >
                 <CardMedia
                   component="img"
@@ -34,6 +45,10 @@ function Media(props) {
                     height: 150,
                     objectFit: 'cover',
                     borderRadius: '8px',
+                    transition: 'transform 0.3s ease-in-out', // Add transition for hover effect
+                    '&:hover': {
+                      transform: 'scale(1.05)', // Scale image on hover
+                    },
                   }}
                 />
               </Link>

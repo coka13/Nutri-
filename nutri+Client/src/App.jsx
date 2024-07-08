@@ -28,7 +28,7 @@ function App() {
   return (
     <div className="app-container">
       {shouldRenderDrawer && auth.loggedIn && (
-        <CustomDrawer list={['Share a Recipe', 'Plan a Meal', 'Shopping List', 'Nutritional Calculator', 'Logout']} links={["/recipe","/meal","/shopping","/nutrition","/"]} />
+        <CustomDrawer list={['Share a Recipe', 'Plan a Meal', 'Shopping List', 'Nutritional Calculator']} links={["/recipe","/meal","/shopping","/nutrition"]} />
       )}
       <div className="main-content">
         <Routes>

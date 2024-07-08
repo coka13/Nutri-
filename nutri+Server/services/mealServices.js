@@ -6,6 +6,10 @@ export const getAllMealsByUserService = (userId) => {
   return MealModel.find({ user: userId });
 };
 
+export const getMealByName = (userID, mealName,recipes) =>
+  MealModel.findOne({ user: userID, name: mealName, recipes: recipes});
+
+
 export const getMealById = (userID, mealID) =>
   MealModel.findOne({ user: userID, _id: mealID });
 

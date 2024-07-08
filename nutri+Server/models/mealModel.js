@@ -5,14 +5,6 @@ const mealSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  description: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    required: true,
-  },
   recipes: [
     {
       type: mongoose.Schema.Types.ObjectId,

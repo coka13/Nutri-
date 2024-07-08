@@ -1,50 +1,53 @@
 import React, { useState } from "react";
 import CustomCard from "../../Components/CustomCard/CustomCard";
-import { Box, Button, Link, TextField } from "@mui/material";
+import { Alert, Box, Button, Link, TextField, Typography } from "@mui/material";
 import "./LoginPage.css";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query"; // Import useMutation from @tanstack/react-query
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/slices/authSlice";
+import axios from "axios"; // Import axios
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setErrorMessage] = useState("");
   const dispatch = useDispatch();
 
-  // Define your mutation function
-  const { mutate, isLoading, error } = useMutation({
-    mutationFn: async () => {
-      const response = await fetch("http://localhost:3000/api/user/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
-      const jsonData = await response.json();
-      return jsonData;
-    },
-    onSuccess: (data) => {
-      console.log("Login successful:", data);
-      if (data!=="User not found" && data!=="Invalid password" && data!=="Password not found for user"){
-      dispatch(setUser(data))
-
-        navigate("/home");
-      } 
-    },
-    onError: (error) => {
-      console.error("Login failed:", error);
-      alert("An error occurred. Please try again later.");
-    },
-  });
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Call mutate to initiate the login mutation
-    mutate();
 
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/user/login",
+        { username, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = response.data;
+      console.log("Login successful:", data);
+
+      dispatch(setUser(data));
+      navigate("/home");
+
+    } catch (error) {
+      console.error("Login failed:", error);
+      if (error.response) {
+        if (error.response.status === 401) {
+          setErrorMessage("Invalid password. Please try again.");
+        } else if (error.response.status === 404) {
+         setErrorMessage("User not found. Please try again.");
+        } else {
+          setErrorMessage("An error occurred. Please try again later.");
+        }
+      } else {
+        setErrorMessage("An error occurred. Please try again later.");
+      }
+    }
   };
 
   return (
@@ -66,6 +69,7 @@ const LoginPage = () => {
           >
             <div className="input-group">
               <TextField
+              required
                 id="username"
                 label="Username"
                 variant="outlined"
@@ -95,6 +99,7 @@ const LoginPage = () => {
                 type="password"
                 label="Password"
                 variant="outlined"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 sx={{
@@ -115,6 +120,11 @@ const LoginPage = () => {
                   },
                 }}
               />
+                 {error && (
+            <Alert severity="error" onClose={() => setErrorMessage("")}>
+              {error}
+            </Alert>
+          )}
               <Button
                 type="submit"
                 variant="contained"

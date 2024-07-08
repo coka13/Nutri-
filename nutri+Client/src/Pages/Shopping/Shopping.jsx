@@ -26,8 +26,8 @@ const Shopping = () => {
   const [shoppingLists, setShoppingLists] = useState([]);
   const [selectedShoppingList, setSelectedShoppingList] = useState('');
   const darkMode = useSelector((state) => state.darkMode.darkMode);
-const userID= useSelector((state)=>state.auth.user._id)
-console.log(userID)
+  const userID = useSelector((state) => state.auth.user._id);
+
   // Modal handlers
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -47,12 +47,19 @@ console.log(userID)
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Parse quantity as integer
+    const parsedQuantity = parseInt(quantity, 10);
+
     const newFoodItem = {
       foodName: foodName,
-      quantity: `${quantity} ${unit}`,
+      quantity: parsedQuantity,
+      unit: unit,
     };
+
     setFoodList([...foodList, newFoodItem]);
-    setTotalQuantity(totalQuantity + parseInt(quantity, 10));
+    setTotalQuantity(totalQuantity + parsedQuantity);
+
     resetForm();
     setOpenModal(false);
   };
@@ -61,7 +68,6 @@ console.log(userID)
   useEffect(() => {
     const fetchShoppingLists = async () => {
       try {
-        ; // Replace with actual userId
         const response = await axios.get(`http://localhost:3000/api/shopping/${userID}/shoppingLists`);
         setShoppingLists(response.data);
         console.log('Shopping lists fetched:', response.data);
@@ -70,15 +76,15 @@ console.log(userID)
       }
     };
     fetchShoppingLists();
-  }, []);
+  }, [userID]);
 
   // Save shopping list
   const saveShoppingList = async () => {
+    
     try {
-      ; // Replace with actual userId
       const response = await axios.post(`http://localhost:3000/api/shopping/${userID}/shoppingLists`, {
         foodList: foodList,
-        totalQuantity: totalQuantity,
+        name: 'Shopping List', // Set a default name for the shopping list
       });
       console.log('Shopping list saved:', response.data);
       // Optionally update local state or reset form after saving
@@ -92,14 +98,30 @@ console.log(userID)
   // Delete shopping list
   const deleteShoppingList = async (shoppingListId) => {
     try {
-      const userId = 'yourUserId'; // Replace with actual userId
-      await axios.delete(`/api/${userId}/shoppingLists/${shoppingListId}`);
+      await axios.delete(`http://localhost:3000/api/shopping/${userID}/shoppingLists/${shoppingListId}`);
       console.log('Shopping list deleted successfully.');
       // Optionally update local state or fetch updated list after deletion
       const updatedLists = shoppingLists.filter((list) => list._id !== shoppingListId);
       setShoppingLists(updatedLists);
+      setSelectedShoppingList(''); // Clear selected shopping list after deletion
+      setFoodList([]); // Clear food list when deleting a list
     } catch (error) {
       console.error('Failed to delete shopping list:', error);
+    }
+  };
+
+  // Function to handle changing the selected shopping list
+  const handleShoppingListChange = (event) => {
+    const selectedListId = event.target.value;
+    setSelectedShoppingList(selectedListId);
+
+    // Fetch or update foodList based on selected shopping list
+    const selectedList = shoppingLists.find((list) => list._id === selectedListId);
+
+    if (selectedList) {
+      setFoodList(selectedList.foodItems); // Assuming selectedList.foodList contains items
+    } else {
+      setFoodList([]); // Reset foodList if selectedListId is not found
     }
   };
 
@@ -218,9 +240,9 @@ console.log(userID)
               <Select
                 labelId="unit-label"
                 id="unit"
+                label="Unit"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                label="Unit"
                 sx={{
                   '& .MuiInputLabel-root.Mui-focused': {
                     color: 'black',
@@ -267,16 +289,18 @@ console.log(userID)
       </Modal>
 
       <div className="shopping-list">
-        <List>
-          {foodList.map((food, index) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={<span style={{ color: darkMode ? '#fff' : 'black' }}>{food.foodName}</span>}
-                secondary={<span style={{ color: darkMode ? 'white' : 'grey' }}>{food.quantity}</span>}
-              />
-            </ListItem>
-          ))}
-        </List>
+        {selectedShoppingList && (
+          <List>
+            {foodList.map((food, index) => (
+              <ListItem key={index}>
+                <ListItemText
+                  primary={<span style={{ color: darkMode ? '#fff' : 'black' }}>{food.foodName}</span>}
+                  secondary={<span style={{ color: darkMode ? 'white' : 'grey' }}>{food.quantity} {food.unit}</span>}
+                />
+              </ListItem>
+            ))}
+          </List>
+        )}
         {shoppingLists.length > 0 && (
           <FormControl fullWidth variant="outlined" margin="normal" required>
             <InputLabel id="shopping-list-label">Select Shopping List</InputLabel>
@@ -284,7 +308,7 @@ console.log(userID)
               labelId="shopping-list-label"
               id="shoppingList"
               value={selectedShoppingList}
-              onChange={(e) => setSelectedShoppingList(e.target.value)}
+              onChange={handleShoppingListChange}
               label="Shopping List"
               sx={{
                 '& .MuiInputLabel-root.Mui-focused': {
@@ -310,29 +334,14 @@ console.log(userID)
                 </MenuItem>
               ))}
             </Select>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => deleteShoppingList(selectedShoppingList)}
-              sx={{
-                marginTop: '10px',
-                marginBottom: '10px',
-                backgroundColor: '#B81D33',
-                '&:hover': {
-                  backgroundColor: '#B81D33',
-                },
-              }}
-            >
-              Delete Shopping List
-            </Button>
           </FormControl>
         )}
       </div>
 
       <Button
+        type="button"
         variant="contained"
         color="primary"
-        onClick={saveShoppingList}
         sx={{
           marginTop: '10px',
           marginBottom: '10px',
@@ -341,8 +350,27 @@ console.log(userID)
             backgroundColor: '#B81D33',
           },
         }}
+        onClick={saveShoppingList}
       >
         Save Shopping List
+      </Button>
+
+      <Button
+        type="button"
+        variant="contained"
+        color="secondary"
+        sx={{
+          marginTop: '10px',
+          marginBottom: '10px',
+          backgroundColor: '#B81D33',
+          '&:hover': {
+            backgroundColor: '#B81D33',
+          },
+        }}
+        onClick={() => deleteShoppingList(selectedShoppingList)}
+        disabled={!selectedShoppingList}
+      >
+        Delete Shopping List
       </Button>
     </div>
   );

@@ -10,24 +10,31 @@ import { Avatar, Button, IconButton, Link as MuiLink } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkModeState } from "../../Pages/store/slices/darkMode";
+import { logout } from "../../Pages/store/slices/authSlice";
+
 
 const CustomDrawer = ({ list, links }) => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const darkMode = useSelector((state) => state.darkMode.darkMode); 
+  const darkMode = useSelector((state) => state.darkMode.darkMode);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
 
   const toggleDarkMode = () => {
-    dispatch(toggleDarkModeState()); // Dispatch the action to toggle dark mode
+    dispatch(toggleDarkModeState());
+  };
+
+  const handleLogout = () => {
+    dispatch(logout()); // Dispatch the logout action
+    setOpen(false); // Close the drawer after logout
   };
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <Button onClick={toggleDarkMode} sx={{ marginTop: "10px", color: "black" }}>
-        {darkMode ? "Light Mode" : "Dark Mode"} {/* Button text dynamically changes based on `darkMode` */}
+        {darkMode ? "Light Mode" : "Dark Mode"}
       </Button>
       <MuiLink component={RouterLink} to="/home" underline="none" sx={{ color: darkMode ? "black" : "white" }}>
         <Avatar sx={{ marginTop: "10px", width: "100%", height: "50%" }} src="logo2.png" />
@@ -40,6 +47,12 @@ const CustomDrawer = ({ list, links }) => {
             </ListItemButton>
           </ListItem>
         ))}
+        {/* Logout Button */}
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleLogout}>
+            <ListItemText primary="Logout" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );

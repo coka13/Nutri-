@@ -1,11 +1,26 @@
 import React, { useState } from 'react';
-import { Button, Modal, TextField, Typography, List, ListItem, ListItemText } from '@mui/material';
-
+import {
+  Button,
+  Modal,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Card,
+  CardMedia,
+} from '@mui/material';
+import { useSelector } from 'react-redux';
+import MealList from '../../Components/MealList/MealList';
+import './Meal.css';
 
 const Meal = () => {
-  const [foodName, setFoodName] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [foodList, setFoodList] = useState([]);
+  const [selectedDish, setSelectedDish] = useState(null);
+
+  const dishes = useSelector(state => state.recipes.recipes);
+
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -13,25 +28,30 @@ const Meal = () => {
 
   const handleModalClose = () => {
     setOpenModal(false);
-    // Reset form fields when modal is closed
-    setFoodName('');
+    setSelectedDish(null);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add the entered food details to the list
-    const newFoodItem = {
-      foodName: foodName,
-    };
-    setFoodList([...foodList, newFoodItem]);
-    // Clear form fields after adding to the list
-    setFoodName('');
-    // Close the modal after adding the item
-    setOpenModal(false);
+    if (!selectedDish) {
+      alert('Please select a dish.');
+      return;
+    }
+
+    // Add selected dish to foodList
+    setFoodList([...foodList, selectedDish]);
+    setSelectedDish(null); // Reset selectedDish
+    setOpenModal(false); // Close the modal
+  };
+
+
+  const handleDishChange = (e) => {
+    const selectedRecipe = dishes.find(dish => dish.recipeName === e.target.value);
+    setSelectedDish(selectedRecipe);
   };
 
   return (
-    <div className="shopping-container">
+    <div className="meal-container">
       <Button
         type="button"
         variant="contained"
@@ -60,37 +80,52 @@ const Meal = () => {
       >
         <div className="modal-content">
           <Typography variant="h6" component="h2" gutterBottom className="modal-title">
-            Enter Food Name
+            Add Food
           </Typography>
           <form onSubmit={handleSubmit}>
-            <TextField
-              type="text"
-              value={foodName}
-              onChange={(e) => setFoodName(e.target.value)}
-              label="Food Name"
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              required
-              sx={{
-                marginBottom: '10px',
-                '& .MuiInputLabel-root.Mui-focused': {
-                  color: 'black',
-                  fontWeight: 'bold',
-                },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#B81D33',
+            <FormControl fullWidth variant="outlined" margin="normal">
+              <InputLabel id="food-name-label">Food Name</InputLabel>
+              <Select
+                labelId="food-name-label"
+                value={selectedDish ? selectedDish.recipeName : ''}
+                onChange={handleDishChange}
+                label="Food Name"
+                required
+                sx={{
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: 'black',
+                    fontWeight: 'bold',
                   },
-                  '&:hover fieldset': {
-                    borderColor: '#B81D33',
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#B81D33',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#B81D33',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#B81D33',
+                    },
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#B81D33',
-                  },
-                },
-              }}
-            />
+                }}
+              >
+                {dishes.map((dish) => (
+                  <MenuItem key={dish._id} value={dish.recipeName}>
+                    {dish.recipeName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {selectedDish && (
+              <Card sx={{ maxWidth: 200, marginBottom: '10px' }}>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={selectedDish.image}
+                  alt={selectedDish.recipeName}
+                />
+              </Card>
+            )}
             <Button
               type="submit"
               variant="contained"
@@ -107,20 +142,15 @@ const Meal = () => {
               Add Food
             </Button>
           </form>
+          
         </div>
       </Modal>
 
-      <div className="shopping-list">
-        <List>
-          {foodList.map((food, index) => (
-            <ListItem key={index}>
-              <ListItemText primary={food.foodName} />
-            </ListItem>
-          ))}
-        </List>
+      <div className="meal-list">
+        <MealList dishes={foodList} />
       </div>
     </div>
   );
 };
 
-export default Meal;
+export default Meal; // Export the Meal component as the default export

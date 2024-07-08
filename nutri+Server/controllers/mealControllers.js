@@ -1,69 +1,72 @@
-// mealController.js
-
-import { serverResponse } from "../utils/serverResponse.js";
 import {
   createMeal,
   getAllMealsByUserService,
   getMealById,
-  deleteMeal,
-  updateMeal,
+  deleteMeal as deleteMealService,
+  updateMeal as updateMealService,
+  getMealByName,
 } from "../services/mealServices.js";
+export const createMealController = async (req, res) => {
+  try {
+    const existingMeal = await getMealByName(req.body.user, req.body.name, req.body.recipes);
+    if (existingMeal) {
+      return res.status(409).json({ error: "Meal already exists" });
+    }
 
-// Controller to create a new meal
-export const createMealController = (req, res) => {
-  const mealData = req.body;
-  createMeal(mealData)
-    .then((createdMeal) => serverResponse(res, 201, createdMeal))
-    .catch((error) => serverResponse(res, 500, { error: error.message }));
+    const meal = await createMeal(req.body);
+    res.status(201).json(meal);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-// Controller to get all meals for a user
-export const getAllMealsByUserController = (req, res) => {
-  const userId = req.params.userId;
-  getAllMealsByUserService(userId)
-    .then((meals) => serverResponse(res, 200, meals))
-    .catch((error) => serverResponse(res, 500, { error: error.message }));
+
+export const getAllMealsByUserController = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const meals = await getAllMealsByUserService(userId);
+    res.status(200).json(meals);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-// Controller to get a meal by ID for a user
-export const getMealByIdController = (req, res) => {
-  const userId = req.params.userId;
-  const mealId = req.params.mealId;
-  getMealById(userId, mealId)
-    .then((meal) => {
-      if (!meal) {
-        return serverResponse(res, 404, { message: "Meal not found" });
-      }
-      serverResponse(res, 200, meal);
-    })
-    .catch((error) => serverResponse(res, 500, { error: error.message }));
+export const getMealByIdController = async (req, res) => {
+  const { userId, mealId } = req.params;
+  try {
+    const meal = await getMealById(userId, mealId);
+    if (!meal) {
+      return res.status(404).json({ message: "Meal not found" });
+    }
+    res.status(200).json(meal);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-// Controller to delete a meal by ID for a user
-export const deleteMealController = (req, res) => {
-  const userId = req.params.userId;
-  const mealId = req.params.mealId;
-  deleteMeal(userId, mealId)
-    .then((deletedMeal) => {
-      if (!deletedMeal) {
-        return serverResponse(res, 404, { message: "Meal not found" });
-      }
-      serverResponse(res, 200, { message: "Meal deleted successfully" });
-    })
-    .catch((error) => serverResponse(res, 500, { error: error.message }));
+export const deleteMealController = async (req, res) => {
+  const { userId, mealId } = req.params;
+  try {
+    const meal = await deleteMealService(userId, mealId);
+    if (!meal) {
+      return res.status(404).json({ message: "Meal not found" });
+    }
+    res.status(200).json({ message: "Meal deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
-// Controller to update a meal by ID for a user
-export const updateMealController = (req, res) => {
-  const userId = req.params.userId;
-  const mealId = req.params.mealId;
-  const updatedData = req.body;
-  updateMeal(userId, mealId, updatedData)
-    .then((updatedMeal) => {
-      if (!updatedMeal) {
-        return serverResponse(res, 404, { message: "Meal not found" });
-      }
-      serverResponse(res, 200, updatedMeal);
-    })
-    .catch((error) => serverResponse(res, 500, { error: error.message }));
+export const updateMealController = async (req, res) => {
+  const { userId, mealId } = req.params;
+  const updatedMeal = req.body;
+  try {
+    const meal = await updateMealService(userId, mealId, updatedMeal);
+    if (!meal) {
+      return res.status(404).json({ message: "Meal not found" });
+    }
+    res.status(200).json(meal);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
