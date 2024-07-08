@@ -3,11 +3,15 @@ import CustomMedia from '../../Components/CustomMedia/CustomMedia'
 import { useDispatch, useSelector } from 'react-redux'
 import { setRecipes } from '../store/slices/recipesSlice'
 import "./HomePage.css"
+import { setMeals } from '../store/slices/mealSlice'
 
 
 const HomePage = () => {
 const dispatch = useDispatch();
- // Example of fetching recipes (replace with your actual fetch logic)
+const userID = useSelector((state) => state.auth.user._id);
+const recipes = useSelector((state) => state.recipes.recipes);
+const meals = useSelector((state) => state.meals.meals);
+
  useEffect(() => {
   const fetchRecipes = async () => {
     try {
@@ -22,8 +26,23 @@ const dispatch = useDispatch();
     }
   };
 
+  const fetchMeals = async () => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/meal/${userID}/meals`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch meals');
+      }
+      const data = await response.json();
+      dispatch(setMeals(data));
+    } catch (error) {
+      console.error('Error fetching meals:', error);
+    }
+  }
+
 
   fetchRecipes();
+  fetchMeals();
 }, []);
 const user=useSelector((state)=>state.auth.user)
     const data = [

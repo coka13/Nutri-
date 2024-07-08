@@ -1,22 +1,31 @@
-import * as React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import { Alert, Button, TextField } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { addMeal } from '../../Pages/store/slices/mealSlice';
+import Typography from '@mui/material/Typography';
+import { Alert, List, ListItem, ListItemText, ListItemAvatar, Avatar, Divider } from '@mui/material';
 
-export default function MealList({ dishes }) {
-  const dispatch = useDispatch();
-  const userID = useSelector((state) => state.auth.user._id);
-  const recipeIds = dishes.map(recipe => recipe._id);
-  const [mealName, setMealName] = React.useState(''); 
-  const [error,setErrorMessage]=React.useState(''); 
+export default function MealsList({ dishes }) {
+  const [error, setErrorMessage] = useState('');
+  
+
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  const fetchRecipes = async () => {
+    const recipeIds = dishes.map(recipe => recipe._id);
+    try {
+      const response = await axios.get('http://localhost:3000/api/recipe/recipes', {
+        params: {
+          ids: recipeIds,
+        },
+      });
+      console.log('Recipes:', response.data);
+      setRecipes(response.data);
+    } catch (error) {
+      console.error('Get recipes failed:', error);
+      setErrorMessage('Failed to fetch recipes.');
+    }
+  };
 
   if (!dishes || !Array.isArray(dishes)) {
     return null; // Handle case where dishes is not defined or not an array
@@ -26,32 +35,6 @@ export default function MealList({ dishes }) {
   const starters = dishes.filter(dish => dish.category === 'starter');
   const mainCourse = dishes.filter(dish => dish.category === 'main course');
   const dessert = dishes.filter(dish => dish.category === 'dessert');
-
-  const handleMealSave = async () => {
-    console.log('Saving meal:', dishes);
-    if (!mealName) {
-      setErrorMessage('Please enter a meal name.');
-      return;
-    }
-    try {
-      const response = await axios.post(`http://localhost:3000/api/meal/meals`, {
-        recipes: recipeIds, // Send array of recipe IDs
-        user: userID,
-        name: mealName, // Include mealName in the request body
-      });
-      dispatch(addMeal(response.data));
-      console.log('Meal saved:', dishes);
-    } catch (error) {
-        if (error.response) {
-          if (error.response.status === 409) {
-            setErrorMessage("Meal already exists. Please try again.");
-          }
-        } else {
-          setErrorMessage("An error occurred. Please try again later.");
-        }
-    }
-  };
-
 
   return (
     <div>
@@ -163,63 +146,10 @@ export default function MealList({ dishes }) {
         </>
       )}
 
-      {/* Save Meal Button */}
-      {dishes.length > 0 && (
-        <div>
-          <Typography variant="h6" component="h2" gutterBottom>
-            Enter Meal Name:
-          </Typography>
-          <TextField
-              type="text"
-              value={mealName}
-              onChange={(e) => setMealName(e.target.value)}
-              label="Meal Name"
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              className="input-field"
-              sx={{
-                marginBottom: "10px",
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
-              }}
-            />
-
-
-          {error && (
-            <Alert severity="error" onClose={() => setErrorMessage("")}>
-              {error}
-            </Alert>
-          )}
-          <Button
-            onClick={handleMealSave}
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{
-              marginTop: '10px',
-              backgroundColor: '#B81D33',
-              '&:hover': {
-                backgroundColor: '#B81D33',
-              },
-            }}
-          >
-            Save Meal
-          </Button>
-        </div>
+      {error && (
+        <Alert severity="error" onClose={() => setErrorMessage("")}>
+          {error}
+        </Alert>
       )}
     </div>
   );

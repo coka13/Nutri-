@@ -13,12 +13,13 @@ import {
 import { useSelector } from 'react-redux';
 import MealList from '../../Components/MealList/MealList';
 import './Meal.css';
+import MealCarousel from '../../Components/MealCarousel/MealCarousel';
 
 const Meal = () => {
   const [openModal, setOpenModal] = useState(false);
   const [foodList, setFoodList] = useState([]);
   const [selectedDish, setSelectedDish] = useState(null);
-
+  const meals = useSelector(state => state.meals.meals);
   const dishes = useSelector(state => state.recipes.recipes);
 
 
@@ -145,7 +146,7 @@ const Meal = () => {
           
         </div>
       </Modal>
-
+<MealCarousel meals={meals} />
       <div className="meal-list">
         <MealList dishes={foodList} />
       </div>

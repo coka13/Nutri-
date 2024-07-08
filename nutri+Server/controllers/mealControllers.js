@@ -25,6 +25,7 @@ export const getAllMealsByUserController = async (req, res) => {
   const { userId } = req.params;
   try {
     const meals = await getAllMealsByUserService(userId);
+    console.log(meals)
     res.status(200).json(meals);
   } catch (error) {
     res.status(500).json({ error: error.message });
