@@ -1,4 +1,4 @@
-import * as React from "react";
+import  React ,{useState} from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -15,6 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { deleteRecipe } from "../../Pages/store/slices/recipesSlice";
 import axios from "axios";
+import UpdateRecipe from "../../Pages/Recipe/UpdateRecipe";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -50,88 +51,106 @@ export default function RecipeCard({ recipe, expanded, setExpanded }) {
       console.error("Delete failed:", error);
     }
   };
+  const [openModal, setOpenModal] = useState(false);
+  const [recipeId, setRecipeId] = useState();
 
+  const handleEdit=(id) => {
+    setOpenModal(true)
+    setRecipeId(recipe._id)
+  }
   return (
-    <Card
-      sx={{
-        maxWidth: 700,
-      }}
-    >
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: "#B81D33" }} aria-label="recipe">
-            {recipe.recipeName.charAt(0)}
-          </Avatar>
-        }
-        action={
-          <div className="actions">
-            <IconButton sx={{ color: "#B81D33" }} aria-label="edit">
-              <EditIcon />
-            </IconButton>
-
-            <IconButton
-              onClick={handleDelete}
-              sx={{ color: "#B81D33" }}
-              aria-label="delete"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </div>
-        }
-        title={recipe.recipeName}
-      />
-      <CardMedia
-        component="img"
-        height="350"
-        image={recipe.image} // Assuming recipe.image is the URL string
-        alt={recipe.name}
-      />
-      <CardContent>
-        <Typography variant="body2" >
-          {recipe.description}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {recipe.category}
-        </Typography>
-      </CardContent>
-      <CardActions
-        sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+    <>
+      <Card
+        sx={{
+          maxWidth: 700,
+        }}
       >
-        <Typography>Show More Details</Typography>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardHeader
+          avatar={
+            <Avatar sx={{ bgcolor: "#B81D33" }} aria-label="recipe">
+              {recipe.recipeName.charAt(0)}
+            </Avatar>
+          }
+          action={
+            <div className="actions">
+              <IconButton sx={{ color: "#B81D33" }} aria-label="edit">
+                <EditIcon onClick={handleEdit}/>
+              </IconButton>
+
+              <IconButton
+                onClick={handleDelete}
+                sx={{ color: "#B81D33" }}
+                aria-label="delete"
+              >
+                <DeleteIcon />
+              </IconButton>
+            </div>
+          }
+          title={recipe.recipeName}
+        />
+        <CardMedia
+          component="img"
+          height="350"
+          image={recipe.image} // Assuming recipe.image is the URL string
+          alt={recipe.name}
+        />
         <CardContent>
-          <Typography paragraph>Ingredients:</Typography>
-          <ul>
-            {recipe.ingredients.map((ingredient, index) => (
-              <li key={index}>
-                <Typography variant="body2" color="text.secondary">
-                  {ingredient.ingredient} {ingredient.quantity} (
-                  {ingredient.unit})
-                </Typography>
-              </li>
-            ))}
-          </ul>
-          <Typography paragraph>Instructions:</Typography>
-          <ol>
-            {recipe.instructions.map((instruction, index) => (
-              <li key={index}>
-                <Typography paragraph variant="body2" color="text.secondary">
-                  {instruction}
-                </Typography>
-              </li>
-            ))}
-          </ol>
+          <Typography variant="body2">{recipe.description}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            {recipe.category}
+          </Typography>
         </CardContent>
-      </Collapse>
-    </Card>
+        <CardActions
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography>Show More Details</Typography>
+          <ExpandMore
+            expand={expanded}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            <ExpandMoreIcon />
+          </ExpandMore>
+        </CardActions>
+        <Collapse in={expanded} timeout="auto" unmountOnExit>
+          <CardContent>
+            <Typography paragraph>Ingredients:</Typography>
+            <ul>
+              {recipe.ingredients.map((ingredient, index) => (
+                <li key={index}>
+                  <Typography variant="body2" color="text.secondary">
+                    {ingredient.ingredient} {ingredient.quantity} (
+                    {ingredient.unit})
+                  </Typography>
+                </li>
+              ))}
+            </ul>
+            <Typography paragraph>Instructions:</Typography>
+            <ol>
+              {recipe.instructions.map((instruction, index) => (
+                <li key={index}>
+                  <Typography paragraph variant="body2" color="text.secondary">
+                    {instruction}
+                  </Typography>
+                </li>
+              ))}
+            </ol>
+          </CardContent>
+        </Collapse>
+      </Card>
+      {recipeId && openModal && (
+        <UpdateRecipe
+          id={recipeId}
+          resetRecipe
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+        />
+      )}
+    </>
   );
 }
