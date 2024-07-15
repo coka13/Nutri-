@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -14,7 +14,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { addRecipe } from "../store/slices/recipesSlice";
+import { addRecipe, fetchAllRecipes } from "../store/slices/recipesSlice";
 import axios from "axios"; // Import Axios
 import RecipeCarousel from "../../Components/RecipeCarousel/RecipeCarousel";
 import "./Recipe.css";
@@ -34,6 +34,10 @@ const Recipe = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState(""); // Added category state
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(fetchAllRecipes())
+  },[])
 
   const recipes = useSelector((state) => state.recipes.recipes); // Redux state
   console.log(recipes)

@@ -18,8 +18,10 @@ import { addRecipe } from "../store/slices/recipesSlice";
 import axios from "axios"; // Import Axios
 import RecipeCarousel from "../../Components/RecipeCarousel/RecipeCarousel";
 import "./Recipe.css";
-
-const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
+import { useFormik, FormikProvider, Form, Field } from "formik";
+import FormikTextField from "../../Components/Form/FormikTextField";
+import FormikSelect from "../../Components/Form/FormikSelectField";
+const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
   // const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [recipeName, setRecipeName] = useState("");
@@ -34,8 +36,22 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
   const [category, setCategory] = useState(""); // Added category state
   const dispatch = useDispatch();
 
-  const recipes = useSelector((state) => state.recipes.recipes); // Redux state
-  console.log(recipes);
+  const initialValues = {
+    errorMessage: recipe?.errorMessage ?? "",
+    recipeName: recipe?.recipeName ?? "",
+    ingredient: recipe?.ingredient ?? "",
+    unit: recipe?.unit ?? "",
+    quantity: recipe?.quantity ?? "",
+    ingredients: recipe?.ingredients ?? [],
+    instruction: recipe?.instruction ?? "",
+    instructions: recipe?.instructions ?? [],
+    image: recipe?.image ?? "",
+    description: recipe?.description ?? "",
+    category: recipe?.category ?? "",
+  };
+  console.log(recipe, initialValues);
+
+  const formik = useFormik({ initialValues, enableReinitialize: true });
 
   // Modal open and close functions
   const handleModalOpen = () => {
@@ -82,7 +98,7 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
 
   // Form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    return console.log(e);
     if (
       recipeName.trim() === "" ||
       ingredients.length === 0 ||
@@ -145,90 +161,10 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
             {errorMessage}
           </Alert>
         )}
-        <form onSubmit={handleSubmit}>
-          <TextField
-            type="text"
-            value={recipeName}
-            onChange={(e) => setRecipeName(e.target.value)}
-            label="Recipe Name"
-            fullWidth
-            variant="outlined"
-            margin="normal"
-            required
-            className="input-field"
-            sx={{
-              marginBottom: "10px",
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
-          />
-          <TextField
-            type="text"
-            onChange={(e) => setImage(e.target.value)}
-            label="Recipe Image URL"
-            fullWidth
-            variant="outlined"
-            margin="normal"
-            className="input-field"
-            sx={{
-              marginBottom: "10px",
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
-          />
-          <TextField
-            type="text"
-            onChange={(e) => setDescription(e.target.value)}
-            label="Recipe Description"
-            fullWidth
-            variant="outlined"
-            margin="normal"
-            className="input-field"
-            sx={{
-              marginBottom: "10px",
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
-          />
+        <FormikProvider value={formik}>
+          <FormikTextField name="recipeName" label="Recipe Name" required />
+          <FormikTextField name="image" label="Recipe Image URL" required />
+          <FormikTextField name="description" label="Recipe Description" />
 
           <FormControl
             fullWidth
@@ -254,12 +190,13 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
           >
             <InputLabel id="unit-label">Category</InputLabel>
             <Select
+              name="category"
               required
               labelId="categort-label"
               id="category"
               label="Category"
               value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onChange={(e) => formik.setFieldValue("category",e.target.value)}
               sx={{
                 "& .MuiInputLabel-root.Mui-focused": {
                   color: "black",
@@ -285,10 +222,11 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
           </FormControl>
 
           <div className="ingredient-input">
-            <TextField
+            <Field
+              component={TextField}
               type="text"
-              value={ingredient}
-              onChange={(e) => setIngredient(e.target.value)}
+              name={"ingredient"}
+              // onChange={(e) => setIngredient(e.target.value)}
               label="Ingredient"
               fullWidth
               variant="outlined"
@@ -336,12 +274,13 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
               }}
             >
               <InputLabel id="unit-label">Unit</InputLabel>
-              <Select
+              <Field
+                component={Select}
                 labelId="unit-label"
                 id="unit"
                 label="Unit"
-                value={unit}
-                onChange={(e) => setUnit(e.target.value)}
+                name={"unit"}
+                // onChange={(e) => setUnit(e.target.value)}
                 sx={{
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "black",
@@ -369,12 +308,13 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
                 <MenuItem value="tsp">tsp</MenuItem>
                 <MenuItem value="tbsp">tbsp</MenuItem>
                 <MenuItem value="cup">cup</MenuItem>
-              </Select>
+              </Field>
             </FormControl>
-            <TextField
-              value={quantity}
+            <Field
+              component={TextField}
+              name={"quantity"}
               type="number"
-              onChange={(e) => setQuantity(parseInt(e.target.value))}
+              // onChange={(e) => setQuantity(parseInt(e.target.value))}
               label="Quantity"
               fullWidth
               variant="outlined"
@@ -428,33 +368,12 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
             ))}
           </List>
 
-          <TextField
+          <Field
+            component={TextField}
             type="text"
-            value={instruction}
-            onChange={(e) => setInstruction(e.target.value)}
+            name={"instruction"}
+            // onChange={(e) => setInstruction(e.target.value)}
             label="Instruction"
-            fullWidth
-            variant="outlined"
-            margin="normal"
-            className="input-field"
-            sx={{
-              marginBottom: "10px",
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
           />
           <Button
             variant="contained"
@@ -496,7 +415,7 @@ const UpdateRecipe = ({ id, openModal, setOpenModal }) => {
           >
             Save Recipe
           </Button>
-        </form>
+        </FormikProvider>
       </div>
     </Modal>
   );

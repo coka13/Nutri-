@@ -52,11 +52,9 @@ export default function RecipeCard({ recipe, expanded, setExpanded }) {
     }
   };
   const [openModal, setOpenModal] = useState(false);
-  const [recipeId, setRecipeId] = useState();
-
+  
   const handleEdit=(id) => {
     setOpenModal(true)
-    setRecipeId(recipe._id)
   }
   return (
     <>
@@ -143,9 +141,9 @@ export default function RecipeCard({ recipe, expanded, setExpanded }) {
           </CardContent>
         </Collapse>
       </Card>
-      {recipeId && openModal && (
+      {openModal && (
         <UpdateRecipe
-          id={recipeId}
+          recipe={recipe}
           resetRecipe
           openModal={openModal}
           setOpenModal={setOpenModal}
