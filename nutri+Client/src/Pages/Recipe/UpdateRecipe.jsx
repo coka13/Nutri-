@@ -81,7 +81,10 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
   // Add ingredient to list
   const handleAddIngredient = () => {
     if (ingredient.trim() !== "" && unit !== "" && quantity) {
-      setIngredients([...ingredients, { ingredient, unit, quantity }]);
+      formik.setFieldValue("ingredients",[
+        ...formik.values.ingredients,
+        { ingredient, unit, quantity },
+      ]);
       setIngredient("");
       setUnit("");
       setQuantity("");
@@ -91,7 +94,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
   // Add instruction to list
   const handleAddInstruction = () => {
     if (instruction.trim() !== "") {
-      setInstructions([...instructions, instruction]);
+      formik.setFieldValue("instructions",[...formik.values.instructions, instruction]);
       setInstruction("");
     }
   };
@@ -165,68 +168,18 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
           <FormikTextField name="recipeName" label="Recipe Name" required />
           <FormikTextField name="image" label="Recipe Image URL" required />
           <FormikTextField name="description" label="Recipe Description" />
-
-          <FormControl
-            fullWidth
-            variant="outlined"
-            margin="normal"
-            sx={{
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
-          >
-            <InputLabel id="unit-label">Category</InputLabel>
-            <Select
-              name="category"
-              required
-              labelId="categort-label"
-              id="category"
-              label="Category"
-              value={category}
-              onChange={(e) => formik.setFieldValue("category",e.target.value)}
-              sx={{
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
-              }}
-            >
-              <MenuItem value="starter">starter</MenuItem>
-              <MenuItem value="main course">main course</MenuItem>
-              <MenuItem value="dessert">dessert</MenuItem>
-            </Select>
-          </FormControl>
+          <FormikSelect
+            name="category"
+            label="Category"
+            options={["starter", "main course", "desert"]}
+          />
 
           <div className="ingredient-input">
             <Field
               component={TextField}
               type="text"
-              name={"ingredient"}
-              // onChange={(e) => setIngredient(e.target.value)}
+              value={ingredient}
+              onChange={(e) => setIngredient(e.target.value)}
               label="Ingredient"
               fullWidth
               variant="outlined"
@@ -274,13 +227,12 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
               }}
             >
               <InputLabel id="unit-label">Unit</InputLabel>
-              <Field
-                component={Select}
+              <Select
                 labelId="unit-label"
                 id="unit"
                 label="Unit"
-                name={"unit"}
-                // onChange={(e) => setUnit(e.target.value)}
+                value={unit}
+                onChange={(e) => setUnit(e.target.value)}
                 sx={{
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "black",
@@ -308,13 +260,13 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                 <MenuItem value="tsp">tsp</MenuItem>
                 <MenuItem value="tbsp">tbsp</MenuItem>
                 <MenuItem value="cup">cup</MenuItem>
-              </Field>
+              </Select>
             </FormControl>
             <Field
               component={TextField}
-              name={"quantity"}
               type="number"
-              // onChange={(e) => setQuantity(parseInt(e.target.value))}
+              value={quantity}
+              onChange={(e) => setQuantity(parseInt(e.target.value))}
               label="Quantity"
               fullWidth
               variant="outlined"
@@ -359,7 +311,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
           <List
             sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
           >
-            {ingredients.map((ingredient, index) => (
+            {formik.values.ingredients?.map((ingredient, index) => (
               <ListItem key={index}>
                 <ListItemText
                   primary={`${ingredient.ingredient}, ${ingredient.quantity} ${ingredient.unit}`}
@@ -368,11 +320,10 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
             ))}
           </List>
 
-          <Field
-            component={TextField}
+          <TextField
             type="text"
-            name={"instruction"}
-            // onChange={(e) => setInstruction(e.target.value)}
+            value={instruction}
+            onChange={(e) => setInstruction(e.target.value)}
             label="Instruction"
           />
           <Button
@@ -394,7 +345,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
           <List
             sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
           >
-            {instructions.map((instruction, index) => (
+            {formik.values.instructions?.map((instruction, index) => (
               <ListItem key={index}>
                 <ListItemText primary={`${index + 1}. ${instruction}`} />
               </ListItem>

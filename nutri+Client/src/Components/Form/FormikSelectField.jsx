@@ -1,8 +1,8 @@
 import React from "react";
 import { Field, useFormikContext } from "formik";
-import { FormControl, InputLabel, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-const FormikSelect = ({ name,options,label, ...props }) => {
+const FormikSelect = ({ name, options, label, ...props }) => {
   const formik = useFormikContext();
   return (
     <FormControl
@@ -58,10 +58,11 @@ const FormikSelect = ({ name,options,label, ...props }) => {
             },
           },
         }}
+        {...props}
       >
-        <MenuItem value="starter">starter</MenuItem>
-        <MenuItem value="main course">main course</MenuItem>
-        <MenuItem value="dessert">dessert</MenuItem>
+        {options.map((opt) => {
+          return <MenuItem value={opt}>{opt}</MenuItem>;
+        })}
       </Select>
     </FormControl>
   );
