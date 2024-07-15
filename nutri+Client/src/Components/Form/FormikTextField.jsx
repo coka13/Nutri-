@@ -10,7 +10,7 @@ const FormikTextField = ({ name, ...props }) => {
       component={TextField}
       value={formik.values[name]}
       onChange={(e) => {
-        formik.setFieldValue(name, e);
+        formik.setFieldValue(name, e.target.value);
       }}
       error={formik.errors[name]}
       touched={formik.touched[name]}
