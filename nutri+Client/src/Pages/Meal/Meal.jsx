@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -9,20 +9,26 @@ import {
   InputLabel,
   Card,
   CardMedia,
-} from '@mui/material';
-import { useSelector } from 'react-redux';
-import MealList from '../../Components/MealList/MealList';
-import './Meal.css';
-import MealCarousel from '../../Components/MealCarousel/MealCarousel';
+} from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import MealList from "../../Components/MealList/MealList";
+import "./Meal.css";
+import MealCarousel from "../../Components/MealCarousel/MealCarousel";
+import { fetchAllRecipes } from "../store/slices/recipesSlice";
+import { fetchAllMeals } from "../store/slices/mealSlice";
 
 const Meal = () => {
   const [openModal, setOpenModal] = useState(false);
   const [foodList, setFoodList] = useState([]);
   const [selectedDish, setSelectedDish] = useState(null);
-  const meals = useSelector(state => state.meals.meals);
-  const dishes = useSelector(state => state.recipes.recipes);
-
-
+  const meals = useSelector((state) => state.meals.meals);
+  const dishes = useSelector((state) => state.recipes.recipes);
+  const user= useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchAllRecipes());
+    dispatch(fetchAllMeals(user._id));
+  }, []);
   const handleModalOpen = () => {
     setOpenModal(true);
   };
@@ -35,7 +41,7 @@ const Meal = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedDish) {
-      alert('Please select a dish.');
+      alert("Please select a dish.");
       return;
     }
 
@@ -45,9 +51,10 @@ const Meal = () => {
     setOpenModal(false); // Close the modal
   };
 
-
   const handleDishChange = (e) => {
-    const selectedRecipe = dishes.find(dish => dish.recipeName === e.target.value);
+    const selectedRecipe = dishes.find(
+      (dish) => dish.recipeName === e.target.value
+    );
     setSelectedDish(selectedRecipe);
   };
 
@@ -58,11 +65,11 @@ const Meal = () => {
         variant="contained"
         color="primary"
         sx={{
-          marginTop: '10px',
-          marginBottom: '10px',
-          backgroundColor: '#B81D33',
-          '&:hover': {
-            backgroundColor: '#B81D33',
+          marginTop: "10px",
+          marginBottom: "10px",
+          backgroundColor: "#B81D33",
+          "&:hover": {
+            backgroundColor: "#B81D33",
           },
         }}
         onClick={handleModalOpen}
@@ -80,7 +87,12 @@ const Meal = () => {
         }}
       >
         <div className="modal-content">
-          <Typography variant="h6" component="h2" gutterBottom className="modal-title">
+          <Typography
+            variant="h6"
+            component="h2"
+            gutterBottom
+            className="modal-title"
+          >
             Add Food
           </Typography>
           <form onSubmit={handleSubmit}>
@@ -88,24 +100,24 @@ const Meal = () => {
               <InputLabel id="food-name-label">Food Name</InputLabel>
               <Select
                 labelId="food-name-label"
-                value={selectedDish ? selectedDish.recipeName : ''}
+                value={selectedDish ? selectedDish.recipeName : ""}
                 onChange={handleDishChange}
                 label="Food Name"
                 required
                 sx={{
-                  '& .MuiInputLabel-root.Mui-focused': {
-                    color: 'black',
-                    fontWeight: 'bold',
+                  "& .MuiInputLabel-root.Mui-focused": {
+                    color: "black",
+                    fontWeight: "bold",
                   },
-                  '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: '#B81D33',
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "#B81D33",
                     },
-                    '&:hover fieldset': {
-                      borderColor: '#B81D33',
+                    "&:hover fieldset": {
+                      borderColor: "#B81D33",
                     },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#B81D33',
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#B81D33",
                     },
                   },
                 }}
@@ -118,7 +130,7 @@ const Meal = () => {
               </Select>
             </FormControl>
             {selectedDish && (
-              <Card sx={{ maxWidth: 200, marginBottom: '10px' }}>
+              <Card sx={{ maxWidth: 200, marginBottom: "10px" }}>
                 <CardMedia
                   component="img"
                   height="140"
@@ -132,25 +144,25 @@ const Meal = () => {
               variant="contained"
               color="primary"
               sx={{
-                marginTop: '10px',
-                marginBottom: '10px',
-                backgroundColor: '#B81D33',
-                '&:hover': {
-                  backgroundColor: '#B81D33',
+                marginTop: "10px",
+                marginBottom: "10px",
+                backgroundColor: "#B81D33",
+                "&:hover": {
+                  backgroundColor: "#B81D33",
                 },
               }}
             >
               Add Food
             </Button>
           </form>
-          
         </div>
       </Modal>
-<MealCarousel meals={meals} />
+     
       <div className="meal-list">
-        <MealList dishes={foodList} />
+        <MealList setDishes={setFoodList} dishes={foodList} />
       </div>
-    </div>
+      <MealCarousel meals={meals} />
+       </div>
   );
 };
 

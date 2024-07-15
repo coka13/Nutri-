@@ -1,9 +1,17 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 const initialState = {
-    meals: []
+  meals: []
 }
-
+export const fetchAllMeals = createAsyncThunk(
+  'meals/fetch',
+  async (_, thunkAPI) => {
+    const userId = thunkAPI.getState().auth?.user?._id;
+    const response = await fetch(`http://localhost:3000/api/meal/${userId}/meals`);
+    const data = await response.json();
+    return data;
+  }
+);
 const mealSlice = createSlice({
   name: "meals",
   initialState,
@@ -19,15 +27,28 @@ const mealSlice = createSlice({
     },
     updateMeal: (state, action) => {
       state.meals = state.meals.map(meal => meal._id === action.payload._id ? action.payload : meal)
+    },
+  }, extraReducers: (builder) => {
+    builder
+      .addCase(fetchAllMeals.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchAllMeals.fulfilled, (state, action) => {
+        state.loading = false;
+        state.meals = action.payload;
+      })
+      .addCase(fetchAllMeals.rejected, (state, action) => {
+        state.meals = [];
+        state.loading = false;
+      });
   },
-}
 });
 
 export const {
-    setMeals,
-    addMeal,
-    deleteMeal,
-    updateMeal
+  setMeals,
+  addMeal,
+  deleteMeal,
+  updateMeal
 } = mealSlice.actions
 
 export default mealSlice.reducer

@@ -11,7 +11,7 @@ export const getMealByName = (userID, mealName,recipes) =>
 
 
 export const getMealById = (userID, mealID) =>
-  MealModel.findOne({ user: userID, _id: mealID });
+  MealModel.findOne({ user: userID, _id: mealID }).populate('recipes').exec();
 
 export const deleteMeal = (userID, mealID) =>
   MealModel.findByIdAndDelete({ user: userID, _id: mealID });

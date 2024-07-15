@@ -105,7 +105,7 @@ export function RecipeCarousel({ recipes }) {
           alignItems: 'center',
           height: 50,
           pl: 2,
-          bgcolor: 'background.default',
+          bgcolor: 'transparent',
           marginBottom: 2, // Add some margin between the title and the carousel
         }}
       >
@@ -116,6 +116,7 @@ export function RecipeCarousel({ recipes }) {
         onChangeIndex={handleStepChange}
         enableMouseEvents
         sx={{
+          backgroundColor:"transparent",
           maxWidth: 600,
           display: 'flex',
           justifyContent: 'center',

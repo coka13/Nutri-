@@ -9,12 +9,12 @@ import Typography from '@mui/material/Typography';
 import { Alert, Button, TextField } from '@mui/material';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMeal } from '../../Pages/store/slices/mealSlice';
+import { addMeal, fetchAllMeals } from '../../Pages/store/slices/mealSlice';
 
-export default function MealList({ dishes }) {
+export default function MealList({ dishes,setDishes }) {
   const dispatch = useDispatch();
   const userID = useSelector((state) => state.auth.user._id);
-  const recipeIds = dishes.map(recipe => recipe._id);
+  const recipeIds = dishes?.map(recipe => recipe._id);
   const [mealName, setMealName] = React.useState(''); 
   const [error,setErrorMessage]=React.useState(''); 
 
@@ -39,8 +39,9 @@ export default function MealList({ dishes }) {
         user: userID,
         name: mealName, // Include mealName in the request body
       });
-      dispatch(addMeal(response.data));
+      dispatch(fetchAllMeals());
       console.log('Meal saved:', dishes);
+      setDishes([])
     } catch (error) {
         if (error.response) {
           if (error.response.status === 409) {

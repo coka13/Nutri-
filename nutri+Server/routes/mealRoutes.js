@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/meals', createMealController); // Create a new meal for a user
 router.get('/:userId/meals', getAllMealsByUserController); // Get all meals for a user
 router.get('/:userId/meals/:mealId', getMealByIdController); // Get a meal by ID for a user
-router.delete('/:userId/meals/:mealId', deleteMealController); // Delete a meal by ID for a user
+router.delete('/meals/:mealId', deleteMealController); // Delete a meal by ID for a user
 router.put('/:userId/meals/:mealId', updateMealController); // Update a meal by ID for a user
 
 export default router;

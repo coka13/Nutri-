@@ -447,7 +447,7 @@ const Recipe = () => {
 
 
             <List
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+              sx={{ width: "100%", maxWidth: 360,  }}
             >
               {ingredients.map((ingredient, index) => (
                 <ListItem key={index}>
@@ -504,7 +504,7 @@ const Recipe = () => {
 
             {/* Display added instructions */}
             <List
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+              sx={{ width: "100%", maxWidth: 360,  }}
             >
               {instructions.map((instruction, index) => (
                 <ListItem key={index}>

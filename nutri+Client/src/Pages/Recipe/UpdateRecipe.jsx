@@ -294,7 +294,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
             </div>
 
             <List
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+              sx={{ width: "100%", maxWidth: 360,  }}
             >
               {formik.values.ingredients?.map((ingredient, index) => (
                 <ListItem key={index}>
@@ -328,7 +328,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
 
             {/* Display added instructions */}
             <List
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+              sx={{ width: "100%", maxWidth: 360,  }}
             >
               {formik.values.instructions?.map((instruction, index) => (
                 <ListItem key={index}>

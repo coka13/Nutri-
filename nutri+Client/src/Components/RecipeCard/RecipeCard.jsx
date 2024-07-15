@@ -61,6 +61,7 @@ export default function RecipeCard({ recipe, expanded, setExpanded }) {
       <Card
         sx={{
           maxWidth: 700,
+         backgroundColor:"transparent",
         }}
       >
         <CardHeader
