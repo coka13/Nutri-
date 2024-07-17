@@ -6,6 +6,7 @@ import userRoutes from './routes/userRoutes.js';
 import recipeRoutes from './routes/recipeRoutes.js';
 import shoppingRoutes from './routes/shoppingRoutes.js';
 import mealRoutes from './routes/mealRoutes.js';
+import nutritionRoutes from './routes/nutritionRoutes.js';
 
 const port=3000
 
@@ -23,6 +24,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/recipe', recipeRoutes); 
 app.use('/api/shopping', shoppingRoutes); 
 app.use('/api/meal', mealRoutes); 
+app.use('/api/nutrition', nutritionRoutes); 
 
 
 app.listen(port, async () => {

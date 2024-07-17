@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Modal,
@@ -7,23 +7,36 @@ import {
   List,
   ListItem,
   ListItemText,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
+  Alert,
 } from "@mui/material";
-import { useSelector } from "react-redux"; // Import useSelector for accessing Redux state
+import { useSelector, useDispatch } from "react-redux"; // Import useSelector for accessing Redux state
 import "./NutriCalc.css";
+import { fetchAllRecipes } from "../store/slices/recipesSlice";
+import axios from "axios";
+import { fetchAllNutrition } from "../store/slices/nutritionSlice";
+import NutritionCarousel from "../../Components/NutritionCarousel/NutritionCarousel";
 
 const NutritiCalc = () => {
-  const [foodName, setFoodName] = useState("");
+  const [selectedFood, setSelectedFood] = useState("");
   const [calories, setCalories] = useState("");
   const [totalFat, setTotalFat] = useState("");
   const [protein, setProtein] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [foodList, setFoodList] = useState([]);
-  const [totalCalories, setTotalCalories] = useState(0);
-  const [totalTotalFat, setTotalTotalFat] = useState(0);
-  const [totalProtein, setTotalProtein] = useState(0);
-
+  const dispatch = useDispatch();
   // Access darkMode state from Redux store
   const darkMode = useSelector((state) => state.darkMode.darkMode);
+  const recipes = useSelector((state) => state.recipes.recipes);
+  const userID = useSelector((state) => state.auth.user._id);
+  const [errorMessage, setErrorMessage] = useState("");
+  useEffect(() => {
+    dispatch(fetchAllRecipes());
+    dispatch(fetchAllNutrition());
+  }, []);
 
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -32,32 +45,40 @@ const NutritiCalc = () => {
   const handleModalClose = () => {
     setOpenModal(false);
     // Reset form fields when modal is closed
-    setFoodName("");
+    setSelectedFood("");
     setCalories("");
     setTotalFat("");
     setProtein("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Add the entered food details to the list
     const newFoodItem = {
-      foodName: foodName,
+      food: selectedFood,
       calories: calories,
-      totalFat: totalFat,
+      fat: totalFat,
       protein: protein,
     };
-    setFoodList([...foodList, newFoodItem]);
-    setTotalCalories(totalCalories + parseInt(calories));
-    setTotalTotalFat(totalTotalFat + parseInt(totalFat));
-    setTotalProtein(totalProtein + parseInt(protein));
+    try {
+      const res = await axios.post(
+        `http://localhost:3000/api/nutrition/${userID}/nutritions`,
+        newFoodItem
+      );
+      dispatch(fetchAllNutrition());
+      setSelectedFood("");
+      setCalories("");
+      setTotalFat("");
+      setProtein("");
+      setOpenModal(false);
+    } catch (e) {
+      if(e.name ==="AxiosError"){
+        setErrorMessage(e?.response?.data?.error);
+      }else{
+        setErrorMessage("Error saving nutrition");
+      }
+    }
     // Clear form fields after adding to the list
-    setFoodName("");
-    setCalories("");
-    setTotalFat("");
-    setProtein("");
-    // Close the modal after adding the item
-    setOpenModal(false);
   };
 
   return (
@@ -77,231 +98,209 @@ const NutritiCalc = () => {
           }}
           onClick={handleModalOpen}
         >
-          Add Food
+          Add Nutrition
         </Button>
 
-        <Modal
-          open={openModal}
-          onClose={handleModalClose}
-          aria-labelledby="food-details-modal"
-          aria-describedby="modal-for-entering-food-details"
-          BackdropProps={{
-            invisible: true, // Hides the backdrop
-          }}
-        >
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              backgroundColor: "white",
-              boxShadow: 24,
-              p: 4,
-            }}
+        {openModal && (
+          <Modal
+            open={openModal}
+            onClose={handleModalClose}
+            aria-labelledby="food-details-modal"
+            aria-describedby="modal-for-entering-food-details"
           >
-            <Typography
-              variant="h6"
-              component="h2"
-              gutterBottom
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-                fontWeight: "bold",
+            <div
+              className="modal-content"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 400,
+                backgroundColor: "white",
+                boxShadow: 24,
+                p: 4,
               }}
             >
-              Enter Food Details
-            </Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                type="text"
-                value={foodName}
-                onChange={(e) => setFoodName(e.target.value)}
-                label="Food Name"
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                required
+              <Typography
+                variant="h6"
+                component="h2"
+                gutterBottom
                 sx={{
-                  marginBottom: "10px",
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
-                }}
-              />
-              <TextField
-                type="number"
-                value={calories}
-                onChange={(e) => setCalories(e.target.value)}
-                label="Calories"
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                required
-                sx={{
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
-                }}
-              />
-              <TextField
-                type="number"
-                value={totalFat}
-                onChange={(e) => setTotalFat(e.target.value)}
-                label="Total Fat"
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                required
-                sx={{
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
-                }}
-              />
-              <TextField
-                type="number"
-                value={protein}
-                onChange={(e) => setProtein(e.target.value)}
-                label="Protein"
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                required
-                sx={{
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
-                }}
-              />
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                sx={{
-                  marginTop: "10px",
-                  marginBottom: "10px",
-                  backgroundColor: "#B81D33",
-                  "&:hover": {
-                    backgroundColor: "#B81D33",
-                  },
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  fontWeight: "bold",
                 }}
               >
-                Add Food
-              </Button>
-            </form>
-          </div>
-        </Modal>
-
-        <div style={{ marginTop: "20px" }}>
-          <List>
-            {foodList.map((food, index) => (
-              <ListItem
-                key={index}
-                sx={{ color: darkMode ? "white" : "black" }}
-              >
-                <ListItem
-                  key={index}
+                Enter Nutritional Details
+              </Typography>
+              {errorMessage && (
+                <Alert severity="error" onClose={() => setErrorMessage("")}>
+                  {errorMessage}
+                </Alert>
+              )}
+              <form onSubmit={handleSubmit}>
+                <FormControl
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  required
                   sx={{
-                    color: darkMode ? "#fff" : "#333",
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "black",
+                      fontWeight: "bold",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                    },
                   }}
                 >
-                  <ListItemText
-                    primary={
-                      <span sx={{ color: darkMode ? "#fff" : "black" }}>
-                        {food.foodName}
-                      </span>
-                    }
-                    secondary={
-                      <span
-                        style={{ color: darkMode ? "white" : "grey" }}
-                      >{`Calories: ${food.calories}, Total Fat: ${food.totalFat}, Protein: ${food.protein}`}</span>
-                    }
-                  />
-                </ListItem>
-              </ListItem>
-            ))}
-          </List>
-          <Typography
-            variant="h6"
-            component="h2"
-            gutterBottom
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-              fontWeight: "bold",
-            }}
-          >
-            Total
-          </Typography>
-          {foodList.length > 0 && (
-            <Typography
-              variant="body1"
-              component="p"
-              gutterBottom
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column",
-                color: "#B81D33",
-                fontWeight: "bold",
-              }}
-            >
-              Calories: {totalCalories}, Total Fat: {totalTotalFat}, Protein:{" "}
-              {totalProtein}
-            </Typography>
-          )}
+                  <InputLabel id="food-label">Select Food</InputLabel>
+                  <Select
+                    labelId="food-label"
+                    id="food"
+                    label="Select Food"
+                    value={selectedFood}
+                    onChange={(e) => setSelectedFood(e.target.value)}
+                    sx={{
+                      "& .MuiInputLabel-root.Mui-focused": {
+                        color: "black",
+                        fontWeight: "bold",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": {
+                          borderColor: "#B81D33",
+                        },
+                        "&:hover fieldset": {
+                          borderColor: "#B81D33",
+                        },
+                        "&.Mui-focused fieldset": {
+                          borderColor: "#B81D33",
+                        },
+                      },
+                    }}
+                  >
+                    {recipes?.length > 0 &&
+                      recipes.map((r) => {
+                        return (
+                          <MenuItem key={r._id} value={r._id}>
+                            {r.recipeName}
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+                </FormControl>
+                <TextField
+                  type="number"
+                  value={calories}
+                  onChange={(e) => setCalories(e.target.value)}
+                  label="Calories"
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  sx={{
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "black",
+                      fontWeight: "bold",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                    },
+                  }}
+                />
+                <TextField
+                  type="number"
+                  value={totalFat}
+                  onChange={(e) => setTotalFat(e.target.value)}
+                  label="Total Fat"
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  sx={{
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "black",
+                      fontWeight: "bold",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                    },
+                  }}
+                />
+                <TextField
+                  type="number"
+                  value={protein}
+                  onChange={(e) => setProtein(e.target.value)}
+                  label="Protein"
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  required
+                  sx={{
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "black",
+                      fontWeight: "bold",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                    },
+                  }}
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    marginTop: "10px",
+                    marginBottom: "10px",
+                    backgroundColor: "#B81D33",
+                    "&:hover": {
+                      backgroundColor: "#B81D33",
+                    },
+                  }}
+                >
+                  Add Food
+                </Button>
+              </form>
+            </div>
+          </Modal>
+        )}
+
+        <div className="nutrition-list">
+          <NutritionCarousel />
         </div>
       </div>
     </div>

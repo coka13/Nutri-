@@ -172,10 +172,10 @@ const Shopping = () => {
                   },
                 }}
               >
-                <InputLabel id="unit-label">Select Food</InputLabel>
+                <InputLabel id="food-label">Select Food</InputLabel>
                 <Select
-                  labelId="unit-label"
-                  id="unit"
+                  labelId="food-label"
+                  id="food"
                   label="Select Food"
                   value={selectedFood}
                   onChange={(e) => setSelectedFood(e.target.value)}
