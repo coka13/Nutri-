@@ -15,7 +15,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { fetchAllNutrition } from "../../Pages/store/slices/nutritionSlice";
-import NutritionsList from "../NutritionsList /NutritionsList";
+import NutritionsList from "../NutritionsList/NutritionsList";
 import UpdateNutrition from "../../Pages/NutriCalc/UpdateNutrition";
 
 export default function NutritionCard({ nutritionItem }) {
