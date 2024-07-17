@@ -116,9 +116,6 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
       onClose={handleModalClose}
       aria-labelledby="recipe-details-modal"
       aria-describedby="modal-for-entering-recipe-details"
-      BackdropProps={{
-        invisible: true,
-      }}
     >
       <div className="modal-content">
         <Typography
@@ -153,6 +150,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                       <Grid container spacing={2}>
                         <Grid item xs={4} key={index}>
                           <Field
+                          required
                             component={TextField}
                             type="text"
                             name={`ingredients[${index}].ingredient`}
@@ -190,6 +188,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                         </Grid>
                         <Grid item xs={3}>
                           <FormControl
+                          required
                             fullWidth
                             variant="outlined"
                             margin="normal"
@@ -256,6 +255,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                         </Grid>
                         <Grid item xs={3}>
                           <Field
+                          required
                             component={TextField}
                             type="number"
                             name={`ingredients[${index}].quantity`}
@@ -324,8 +324,9 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                 <>
                   {formik.values.instructions.map((inst, index) => (
                     <Grid container spacing={2}>
-                      <Grid  item xs={10} marginBottom={2}>
+                      <Grid item xs={10} marginBottom={2}>
                         <TextField
+                          required
                           type="text"
                           value={inst}
                           onChange={(e) =>

@@ -6,6 +6,8 @@
   margin: auto;
   border: 2px solid #B81D33;
   border-radius: 8px;
+  height:50rem;
+  overflow: auto;
 }
 
 .input-field {

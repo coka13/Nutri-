@@ -12,7 +12,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-} from "@mui/material";
+} from "@mui/material";``
 import { useDispatch, useSelector } from "react-redux";
 import { addRecipe, fetchAllRecipes } from "../store/slices/recipesSlice";
 import axios from "axios"; // Import Axios
@@ -149,9 +149,7 @@ const Recipe = () => {
         onClose={handleModalClose}
         aria-labelledby="recipe-details-modal"
         aria-describedby="modal-for-entering-recipe-details"
-        BackdropProps={{
-          invisible: true,
-        }}
+       
       >
         <div className="modal-content">
           <Typography
