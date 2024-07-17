@@ -34,6 +34,7 @@ const Recipe = () => {
   const [category, setCategory] = useState(""); // Added category state
   const dispatch = useDispatch();
   const darkMode = useSelector((state) => state.darkMode.darkMode);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     dispatch(fetchAllRecipes());
@@ -104,6 +105,7 @@ const Recipe = () => {
       image,
       description,
       category,
+      user:user._id
     };
 
     try {
@@ -206,6 +208,7 @@ const Recipe = () => {
                 marginBottom: "10px",
                
               }}
+              required
             />
             <TextField
               type="text"
@@ -218,6 +221,7 @@ const Recipe = () => {
               sx={{
                 marginBottom: "10px",
               }}
+              required
             />
 
             <FormControl fullWidth variant="outlined" margin="normal">

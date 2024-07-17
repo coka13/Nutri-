@@ -10,7 +10,7 @@ import {
   Modal,
   Select,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import axios from "axios"; // Import Axios
 import { Field, FieldArray, Form, FormikProvider, useFormik } from "formik";
@@ -90,7 +90,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
       // Send POST request to server
       const response = await axios.put(
         `http://localhost:3000/api/recipe/recipes/${recipe._id}`,
-        values
+        { ...values, user: recipe?.user }
       );
 
       // Dispatch action to update Redux store
@@ -114,19 +114,19 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
       aria-labelledby="recipe-details-modal"
       aria-describedby="modal-for-entering-recipe-details"
     >
-     <div
-          className="modal-content"
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 600,
-            backgroundColor: darkMode ? "black" : "white",
-            boxShadow: 24,
-            p: 4,
-          }}
-        >
+      <div
+        className="modal-content"
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 600,
+          backgroundColor: darkMode ? "black" : "white",
+          boxShadow: 24,
+          p: 4,
+        }}
+      >
         <Typography
           variant="h6"
           component="h2"
@@ -143,8 +143,12 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
         <FormikProvider value={formik}>
           <Form>
             <FormikTextField name="recipeName" label="Recipe Name" required />
-            <FormikTextField name="image" label="Recipe Image URL" required />
-            <FormikTextField name="description" label="Recipe Description" />
+            <FormikTextField name="image" required label="Recipe Image URL" />
+            <FormikTextField
+              name="description"
+              required
+              label="Recipe Description"
+            />
             <FormikSelect
               name="category"
               label="Category"
@@ -177,7 +181,6 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                             className="input-field"
                             sx={{
                               marginBottom: "10px",
-                              
                             }}
                           />
                         </Grid>
@@ -187,9 +190,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                             fullWidth
                             variant="outlined"
                             margin="normal"
-                            sx={{
-                              
-                            }}
+                            sx={{}}
                           >
                             <InputLabel id="unit-label">Unit</InputLabel>
                             <Select
@@ -237,7 +238,6 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                             className="input-field"
                             sx={{
                               marginBottom: "10px",
-                              
                             }}
                           />
                         </Grid>

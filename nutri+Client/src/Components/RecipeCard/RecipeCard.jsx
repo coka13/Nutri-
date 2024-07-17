@@ -1,4 +1,4 @@
-import  React ,{useState} from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteRecipe } from "../../Pages/store/slices/recipesSlice";
 import axios from "axios";
 import UpdateRecipe from "../../Pages/Recipe/UpdateRecipe";
@@ -30,7 +30,7 @@ const ExpandMore = styled((props) => {
 
 export default function RecipeCard({ recipe, expanded, setExpanded }) {
   const dispatch = useDispatch();
-
+  const user = useSelector((state) => state.auth.user);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -52,16 +52,16 @@ export default function RecipeCard({ recipe, expanded, setExpanded }) {
     }
   };
   const [openModal, setOpenModal] = useState(false);
-  
-  const handleEdit=(id) => {
-    setOpenModal(true)
-  }
+
+  const handleEdit = (id) => {
+    setOpenModal(true);
+  };
   return (
     <>
       <Card
         sx={{
           maxWidth: 700,
-         backgroundColor:"transparent",
+          backgroundColor: "transparent",
         }}
       >
         <CardHeader
@@ -71,19 +71,21 @@ export default function RecipeCard({ recipe, expanded, setExpanded }) {
             </Avatar>
           }
           action={
-            <div className="actions">
-              <IconButton sx={{ color: "#B81D33" }} aria-label="edit">
-                <EditIcon onClick={handleEdit}/>
-              </IconButton>
+            user._id === recipe.user && (
+              <div className="actions">
+                <IconButton sx={{ color: "#B81D33" }} aria-label="edit">
+                  <EditIcon onClick={handleEdit} />
+                </IconButton>
 
-              <IconButton
-                onClick={handleDelete}
-                sx={{ color: "#B81D33" }}
-                aria-label="delete"
-              >
-                <DeleteIcon />
-              </IconButton>
-            </div>
+                <IconButton
+                  onClick={handleDelete}
+                  sx={{ color: "#B81D33" }}
+                  aria-label="delete"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </div>
+            )
           }
           title={recipe.recipeName}
         />
