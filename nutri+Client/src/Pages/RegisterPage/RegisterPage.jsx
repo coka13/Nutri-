@@ -41,7 +41,7 @@ const RegisterPage = () => {
         email,
       });
 
-      if (response.status === 200) {
+      if (response.status === 201) {
         // Registration successful
         window.location.href = "/login"; // Navigate to login page
       } else {
