@@ -1,12 +1,11 @@
 .modal-content {
-  background-color: white;
   padding: 20px;
   width: 80%; /* Adjust width as needed */
   max-width: 600px; /* Set maximum width */
   margin: auto;
   border: 2px solid #B81D33;
   border-radius: 8px;
-  height:50rem;
+  max-height:50rem;
   overflow: auto;
 }
 

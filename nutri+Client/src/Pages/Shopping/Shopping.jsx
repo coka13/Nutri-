@@ -47,11 +47,15 @@ const Shopping = () => {
     try {
       const items = [];
       selectedShoppingList.forEach((meal) => {
-        meal?.recipes.forEach((rec)=>{
-          rec?.ingredients.forEach((ing)=>{
-            items.push({ingredient:ing.ingredient,quantity:ing.quantity,unit:ing.unit});
-          })
-        })
+        meal?.recipes.forEach((rec) => {
+          rec?.ingredients.forEach((ing) => {
+            items.push({
+              ingredient: ing.ingredient,
+              quantity: ing.quantity,
+              unit: ing.unit,
+            });
+          });
+        });
       });
       // return console.log(items)
 
@@ -62,8 +66,8 @@ const Shopping = () => {
           items: items.flat(),
         }
       );
-      setShoppingListName("")
-      setSelectedFood("")
+      setShoppingListName("");
+      setSelectedFood("");
       setSelectedShoppingList([]);
 
       handleModalClose();
@@ -111,163 +115,132 @@ const Shopping = () => {
         Add Shopping List
       </Button>
 
-      {<Modal
-        open={openModal}
-        onClose={handleModalClose}
-        aria-labelledby="food-details-modal"
-        aria-describedby="modal-for-entering-food-details"
-        BackdropProps={{
-          invisible: true, // Hides the backdrop
-        }}
-      >
-        <div className="modal-content">
-          <Typography
-            variant="h6"
-            component="h2"
-            gutterBottom
-            className="modal-title"
+      {
+        <Modal
+          open={openModal}
+          onClose={handleModalClose}
+          aria-labelledby="food-details-modal"
+          aria-describedby="modal-for-entering-food-details"
+          BackdropProps={{
+            invisible: true, // Hides the backdrop
+          }}
+        >
+          <div
+            className="modal-content"
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 600,
+              backgroundColor: darkMode ? "black" : "white",
+              boxShadow: 24,
+              p: 4,
+            }}
           >
-            Enter Shopping List Details
-          </Typography>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              required
-              type="text"
-              value={shoppingListName}
-              onChange={(e) => setShoppingListName(e.target.value)}
-              label="Shooping List Name"
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              className="input-field"
-              sx={{
-                marginBottom: "10px",
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
-              }}
-            />
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <FormControl
+            <Typography
+              variant="h6"
+              component="h2"
+              gutterBottom
+              className="modal-title"
+            >
+              Enter Shopping List Details
+            </Typography>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                required
+                type="text"
+                value={shoppingListName}
+                onChange={(e) => setShoppingListName(e.target.value)}
+                label="Shooping List Name"
                 fullWidth
                 variant="outlined"
                 margin="normal"
-                required
+                className="input-field"
                 sx={{
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
+                  marginBottom: "10px",
+                }}
+              />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <FormControl
+                  fullWidth
+                  variant="outlined"
+                  margin="normal"
+                  required
+                >
+                  <InputLabel id="food-label">Select Meal</InputLabel>
+                  <Select
+                    labelId="food-label"
+                    id="food"
+                    label="Select Food"
+                    value={selectedFood}
+                    onChange={(e) => setSelectedFood(e.target.value)}
+                  >
+                    {meals?.length > 0 &&
+                      meals.map((r) => {
+                        return <MenuItem value={r._id}>{r.name}</MenuItem>;
+                      })}
+                  </Select>
+                </FormControl>
+                <AddIcon fontSize="large" onClick={handleFoodSelection} />
+              </div>
+              {selectedShoppingList?.length > 0 && (
+                <List>
+                  {selectedShoppingList.map((food, index) => (
+                    <ListItem key={index}>
+                      <ListItemText
+                        primary={
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <span
+                              style={{ color: darkMode ? "#fff" : "black" }}
+                            >
+                              {food.name}
+                            </span>
+                            <CloseIcon
+                              onClick={() => handleFoodRemove(index)}
+                            />
+                          </div>
+                        }
+                        secondary={
+                          <span style={{ color: darkMode ? "white" : "grey" }}>
+                            {food.recipes.map(({ ingredients }) => {
+                              return ingredients.map((ing) => {
+                                return `${ing.ingredient} ${ing.quantity} ${ing.unit}`;
+                              });
+                            })}
+                          </span>
+                        }
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              )}
+
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                sx={{
+                  marginTop: "10px",
+                  marginBottom: "10px",
+                  backgroundColor: "#B81D33",
+                  "&:hover": {
+                    backgroundColor: "#B81D33",
                   },
                 }}
               >
-                <InputLabel id="food-label">Select Meal</InputLabel>
-                <Select
-                  labelId="food-label"
-                  id="food"
-                  label="Select Food"
-                  value={selectedFood}
-                  onChange={(e) => setSelectedFood(e.target.value)}
-                  sx={{
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                    },
-                  }}
-                >
-                  {meals?.length > 0 &&
-                    meals.map((r) => {
-                      return <MenuItem value={r._id}>{r.name}</MenuItem>;
-                    })}
-                </Select>
-              </FormControl>
-              <AddIcon fontSize="large" onClick={handleFoodSelection} />
-            </div>
-            {selectedShoppingList?.length > 0 && (
-              <List>
-                {selectedShoppingList.map((food, index) => (
-                  <ListItem key={index}>
-                    <ListItemText
-                      primary={
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <span style={{ color: darkMode ? "#fff" : "black" }}>
-                            {food.name}
-                          </span>
-                          <CloseIcon onClick={() => handleFoodRemove(index)} />
-                        </div>
-                      }
-                      secondary={
-                        <span style={{ color: darkMode ? "white" : "grey" }}>
-                          {food.recipes.map(({ingredients}) => {
-                            return ingredients.map((ing) => {
-                              return `${ing.ingredient} ${ing.quantity} ${ing.unit}`;
-                            });
-                          })}
-                        </span>
-                      }
-                    />
-                  </ListItem>
-                ))}
-              </List>
-            )}
-
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{
-                marginTop: "10px",
-                marginBottom: "10px",
-                backgroundColor: "#B81D33",
-                "&:hover": {
-                  backgroundColor: "#B81D33",
-                },
-              }}
-            >
-              Add to Shopping List
-            </Button>
-          </form>
-        </div>
-      </Modal>}
+                Add to Shopping List
+              </Button>
+            </form>
+          </div>
+        </Modal>
+      }
 
       <div className="shopping-list">
         <ShoppingCarousel />

@@ -71,7 +71,7 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
-          backgroundColor: "white",
+          backgroundColor: darkMode ? "black" : "white",
           boxShadow: 24,
           p: 4,
         }}
@@ -90,29 +90,7 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
           Update Nutritional Details
         </Typography>
         <form onSubmit={handleSubmit}>
-          <FormControl
-            fullWidth
-            variant="outlined"
-            margin="normal"
-            required
-            sx={{
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
-          >
+          <FormControl fullWidth variant="outlined" margin="normal" required>
             <InputLabel id="food-label">Food</InputLabel>
             <Select
               disabled={true}
@@ -121,23 +99,6 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
               label="Select Food"
               value={selectedFood}
               onChange={(e) => setSelectedFood(e.target.value)}
-              sx={{
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
-              }}
             >
               {recipes?.length > 0 &&
                 recipes.map((r) => {
@@ -158,23 +119,6 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
             variant="outlined"
             margin="normal"
             required
-            sx={{
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
           />
           <TextField
             type="number"
@@ -185,23 +129,6 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
             variant="outlined"
             margin="normal"
             required
-            sx={{
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
           />
           <TextField
             type="number"
@@ -212,23 +139,6 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
             variant="outlined"
             margin="normal"
             required
-            sx={{
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
-            }}
           />
           <Button
             type="submit"

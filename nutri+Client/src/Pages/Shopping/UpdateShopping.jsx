@@ -23,7 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { fetchAllMeals } from "../store/slices/mealSlice";
 
 const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
-  console.log(shopping);
+
   const [shoppingListName, setShoppingListName] = useState(shopping?.name);
   const [selectedFood, setSelectedFood] = useState();
   const [selectedShoppingList, setSelectedShoppingList] = useState([]);
@@ -32,7 +32,7 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
   const userID = useSelector((state) => state.auth.user._id);
   const recipes = useSelector((state) => state.recipes.recipes);
   const meals = useSelector((state) => state.meals.meals);
-
+ 
   const dispatch = useDispatch();
 
   // Handle form submission
@@ -97,7 +97,19 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
         invisible: true, // Hides the backdrop
       }}
     >
-      <div className="modal-content">
+     <div
+          className="modal-content"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            backgroundColor: darkMode ? "black" : "white",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
         <Typography
           variant="h6"
           component="h2"
@@ -119,21 +131,7 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
             className="input-field"
             sx={{
               marginBottom: "10px",
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "black",
-                fontWeight: "bold",
-              },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&:hover fieldset": {
-                  borderColor: "#B81D33",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "#B81D33",
-                },
-              },
+              
             }}
           />
           <div style={{ display: "flex", alignItems: "center" }}>
@@ -141,23 +139,7 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
               fullWidth
               variant="outlined"
               margin="normal"
-              sx={{
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
-              }}
+              
             >
               <InputLabel id="food-label">Select Meal</InputLabel>
               <Select
@@ -166,23 +148,7 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
                 label="Select Food"
                 value={selectedFood}
                 onChange={(e) => setSelectedFood(e.target.value)}
-                sx={{
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
-                }}
+                
               >
                 {meals?.length > 0 &&
                     meals.map((r) => {

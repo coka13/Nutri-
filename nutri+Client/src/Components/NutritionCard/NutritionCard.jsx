@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { fetchAllNutrition } from "../../Pages/store/slices/nutritionSlice";
 import NutritionsList from "../NutritionsList/NutritionsList";
 import UpdateNutrition from "../../Pages/NutriCalc/UpdateNutrition";
+import { Grid, Typography } from "@mui/material";
 
 export default function NutritionCard({ nutritionItem }) {
   const dispatch = useDispatch();
@@ -39,19 +40,23 @@ export default function NutritionCard({ nutritionItem }) {
   };
   const handleUpdate = () => setUpdateModal(true);
   return (
-    <Card
-      sx={{
-        maxWidth: 700,
-        background: "transparent",
-      }}
-    >
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: "#B81D33" }} aria-label="nutrition">
-            {nutritionItem?.food?.recipeName?.charAt(0)}
-          </Avatar>
-        }
-        action={
+    <>
+      <Grid container  spacing={2} sx={{ marginBottom: 1 }}>
+        <Grid item xs={2}>
+          <Typography variant="body1">
+            {nutritionItem.food.recipeName}
+          </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="body1">{nutritionItem.fat}g</Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="body1">{nutritionItem.protein}g</Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <Typography variant="body1">{nutritionItem.calories}</Typography>
+        </Grid>
+        <Grid item xs={2}>
           <div className="actions">
             <IconButton
               onClick={handleUpdate}
@@ -69,20 +74,9 @@ export default function NutritionCard({ nutritionItem }) {
               <DeleteIcon />
             </IconButton>
           </div>
-        }
-        title={nutritionItem?.food?.recipeName}
-      />
+        </Grid>
+      </Grid>
 
-      <CardContent>
-        <NutritionsList item={nutritionItem} />
-      </CardContent>
-      <CardActions
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      ></CardActions>
       {updateModal && (
         <UpdateNutrition
           nutrition={nutritionItem}
@@ -92,6 +86,6 @@ export default function NutritionCard({ nutritionItem }) {
           }}
         />
       )}
-    </Card>
+    </>
   );
 }

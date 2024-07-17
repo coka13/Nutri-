@@ -9,9 +9,18 @@ import SwipeableViews from "react-swipeable-views";
 import ShoppingCard from "../ShoppingCard/ShoppingCard";
 import { useSelector } from "react-redux";
 import NutritionCard from "../NutritionCard/NutritionCard";
+import { Card, CardContent, Chip, Grid, Typography } from "@mui/material";
 
 export function NutritionCarousel() {
-  const nutrition=useSelector(state=>state.nutrition.nutrition)
+  const nutrition = useSelector((state) => state.nutrition.nutrition);
+  const totals = nutrition.reduce(
+    (acc, item) => ({
+      totalFats: acc.totalFats + Number(item.fat),
+      totalProtein: acc.totalProtein + Number(item.protein),
+      totalCalories: acc.totalCalories + Number(item.calories),
+    }),
+    { totalFats: 0, totalProtein: 0, totalCalories: 0 }
+  );
   const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
   useEffect(() => {
@@ -48,83 +57,56 @@ export function NutritionCarousel() {
   };
 
   return (
-    <Box
-      sx={{
-        maxWidth: 700,
-        flexGrow: 1,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-        margin: "auto", // Center the box horizontally
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          width: "100%",
-          maxWidth: 700,
-          marginBottom: 2, // Add some margin between the buttons and the carousel
-        }}
-      >
-        <Button
-          sx={{ color: "#B81D33" }}
-          size="small"
-          onClick={handleBack}
-          disabled={activeStep === 0}
-        >
-          {theme.direction === "rtl" ? (
-            <KeyboardArrowRight />
-          ) : (
-            <KeyboardArrowLeft />
-          )}
-          Back
-        </Button>
-        <Button
-          sx={{ color: "#B81D33" }}
-          size="small"
-          onClick={handleNext}
-          disabled={activeStep === maxSteps - 1}
-        >
-          Next
-          {theme.direction === "rtl" ? (
-            <KeyboardArrowLeft />
-          ) : (
-            <KeyboardArrowRight />
-          )}
-        </Button>
-      </Box>
-      {nutrition?.length > 0 && (
-        <SwipeableViews
-          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-          index={activeStep}
-          onChangeIndex={handleStepChange}
-          enableMouseEvents
-          sx={{
-            maxWidth: 600,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor:"transparent",
-          }}
+    <Card sx={{ minWidth: 675, margin: 2 }}>
+      <CardContent>
+        <Grid container spacing={2} sx={{ marginBottom: 1 }}>
+          <Grid item xs={2}>
+            <Typography variant="h6">Recipe</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="h6">Fats</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="h6">Protein</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="h6">Calories</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography variant="h6">Actions</Typography>
+          </Grid>
+        </Grid>
+        {nutrition.map((nutritionItem, index) => (
+        <div key={index}>
+          {Math.abs(activeStep - index) <= 2 ? (
+            <NutritionCard
+              nutritionItem={nutritionItem} // Correct prop name to meal instead of nutrition
+            />
+          ) : null}
+        </div>
+      ))}
+        <div
           style={{
-            background:"transparent",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {nutrition.map((nutritionItem, index) => (
-            <div key={index}>
+          <Chip label={`Total Fats: ${totals.totalFats}g`} color="primary" />
 
-              {Math.abs(activeStep - index) <= 2 ? (
-                <NutritionCard
-                nutritionItem={nutritionItem} // Correct prop name to meal instead of nutrition
-                />
-              ) : null}
-            </div>
-          ))}
-        </SwipeableViews>
-      )}
-    </Box>
+          <Chip
+            label={`Total Protein: ${totals.totalProtein}g`}
+            color="primary"
+          />
+
+          <Chip
+            label={`Total Calories: ${totals.totalCalories}`}
+            color="primary"
+          />
+        </div>
+      </CardContent>
+      
+    </Card>
   );
 }
 

@@ -22,21 +22,6 @@ const FormikTextField = ({ name, ...props }) => {
       className="input-field"
       sx={{
         marginBottom: "10px",
-        "& .MuiInputLabel-root.Mui-focused": {
-          color: "black",
-          fontWeight: "bold",
-        },
-        "& .MuiOutlinedInput-root": {
-          "& fieldset": {
-            borderColor: "#B81D33",
-          },
-          "&:hover fieldset": {
-            borderColor: "#B81D33",
-          },
-          "&.Mui-focused fieldset": {
-            borderColor: "#B81D33",
-          },
-        },
       }}
       {...props}
     />

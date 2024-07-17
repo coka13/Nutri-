@@ -38,6 +38,8 @@ const Meal = () => {
   const meals = useSelector((state) => state.meals.meals);
   const dishes = useSelector((state) => state.recipes.recipes);
   const user = useSelector((state) => state.auth.user);
+  const darkMode = useSelector((state) => state.darkMode.darkMode);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllRecipes());
@@ -126,7 +128,19 @@ const Meal = () => {
           invisible: true, // Hides the backdrop
         }}
       >
-        <div className="modal-content">
+        <div
+          className="modal-content"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            backgroundColor: darkMode ? "black" : "white",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           <Typography
             variant="h6"
             component="h2"
@@ -143,46 +157,10 @@ const Meal = () => {
               fullWidth
               sx={{
                 marginBottom: "10px",
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
               }}
             />
             <div style={{ display: "flex", alignItems: "center" }}>
-              <FormControl
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                sx={{
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
-                }}
-              >
+              <FormControl fullWidth variant="outlined" margin="normal">
                 <InputLabel id="food-name-label">Add Recipe</InputLabel>
                 <Select
                   value={selectedRecipe}
@@ -190,23 +168,6 @@ const Meal = () => {
                   labelId="food-name-label"
                   label="Food Name"
                   required
-                  sx={{
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                    },
-                  }}
                 >
                   {dishes.map((dish) => (
                     <MenuItem key={dish._id} value={dish._id}>

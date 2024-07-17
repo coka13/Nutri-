@@ -15,7 +15,7 @@ import {
 import axios from "axios"; // Import Axios
 import { Field, FieldArray, Form, FormikProvider, useFormik } from "formik";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FormikSelect from "../../Components/Form/FormikSelectField";
 import FormikTextField from "../../Components/Form/FormikTextField";
 import { fetchAllRecipes } from "../store/slices/recipesSlice";
@@ -105,6 +105,8 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
   }
   const handleIngredientUpdate = (index, ingredient) => {};
   const handleIngredientDelete = (index) => {};
+  const darkMode = useSelector((state) => state.darkMode.darkMode);
+
   return (
     <Modal
       open={openModal}
@@ -112,7 +114,19 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
       aria-labelledby="recipe-details-modal"
       aria-describedby="modal-for-entering-recipe-details"
     >
-      <div className="modal-content">
+     <div
+          className="modal-content"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            backgroundColor: darkMode ? "black" : "white",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
         <Typography
           variant="h6"
           component="h2"
@@ -163,21 +177,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                             className="input-field"
                             sx={{
                               marginBottom: "10px",
-                              "& .MuiInputLabel-root.Mui-focused": {
-                                color: "black",
-                                fontWeight: "bold",
-                              },
-                              "& .MuiOutlinedInput-root": {
-                                "& fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                                "&:hover fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                              },
+                              
                             }}
                           />
                         </Grid>
@@ -188,21 +188,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                             variant="outlined"
                             margin="normal"
                             sx={{
-                              "& .MuiInputLabel-root.Mui-focused": {
-                                color: "black",
-                                fontWeight: "bold",
-                              },
-                              "& .MuiOutlinedInput-root": {
-                                "& fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                                "&:hover fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                              },
+                              
                             }}
                           >
                             <InputLabel id="unit-label">Unit</InputLabel>
@@ -218,23 +204,6 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                                   e.target.value
                                 )
                               }
-                              sx={{
-                                "& .MuiInputLabel-root.Mui-focused": {
-                                  color: "black",
-                                  fontWeight: "bold",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                  "& fieldset": {
-                                    borderColor: "#B81D33",
-                                  },
-                                  "&:hover fieldset": {
-                                    borderColor: "#B81D33",
-                                  },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#B81D33",
-                                  },
-                                },
-                              }}
                             >
                               <MenuItem value="piece(s)">piece(s)</MenuItem>
                               <MenuItem value="g">g</MenuItem>
@@ -268,21 +237,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                             className="input-field"
                             sx={{
                               marginBottom: "10px",
-                              "& .MuiInputLabel-root.Mui-focused": {
-                                color: "black",
-                                fontWeight: "bold",
-                              },
-                              "& .MuiOutlinedInput-root": {
-                                "& fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                                "&:hover fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#B81D33",
-                                },
-                              },
+                              
                             }}
                           />
                         </Grid>

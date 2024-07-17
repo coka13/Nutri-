@@ -12,7 +12,8 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
-} from "@mui/material";``
+} from "@mui/material";
+``;
 import { useDispatch, useSelector } from "react-redux";
 import { addRecipe, fetchAllRecipes } from "../store/slices/recipesSlice";
 import axios from "axios"; // Import Axios
@@ -32,6 +33,7 @@ const Recipe = () => {
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState(""); // Added category state
   const dispatch = useDispatch();
+  const darkMode = useSelector((state) => state.darkMode.darkMode);
 
   useEffect(() => {
     dispatch(fetchAllRecipes());
@@ -149,9 +151,20 @@ const Recipe = () => {
         onClose={handleModalClose}
         aria-labelledby="recipe-details-modal"
         aria-describedby="modal-for-entering-recipe-details"
-       
       >
-        <div className="modal-content">
+        <div
+          className="modal-content"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 600,
+            backgroundColor: darkMode ? "black" : "white",
+            boxShadow: 24,
+            p: 4,
+          }}
+        >
           <Typography
             variant="h6"
             component="h2"
@@ -178,21 +191,7 @@ const Recipe = () => {
               className="input-field"
               sx={{
                 marginBottom: "10px",
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
+               
               }}
             />
             <TextField
@@ -205,21 +204,7 @@ const Recipe = () => {
               className="input-field"
               sx={{
                 marginBottom: "10px",
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
+               
               }}
             />
             <TextField
@@ -232,46 +217,10 @@ const Recipe = () => {
               className="input-field"
               sx={{
                 marginBottom: "10px",
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
               }}
             />
 
-            <FormControl
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              sx={{
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
-              }}
-            >
+            <FormControl fullWidth variant="outlined" margin="normal">
               <InputLabel id="unit-label">Category</InputLabel>
               <Select
                 required
@@ -280,23 +229,6 @@ const Recipe = () => {
                 label="Category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                sx={{
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
-                }}
               >
                 <MenuItem value="starter">starter</MenuItem>
                 <MenuItem value="main course">main course</MenuItem>
@@ -316,45 +248,9 @@ const Recipe = () => {
                 className="input-field"
                 sx={{
                   marginBottom: "10px",
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
                 }}
               />
-              <FormControl
-                fullWidth
-                variant="outlined"
-                margin="normal"
-                sx={{
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
-                }}
-              >
+              <FormControl fullWidth variant="outlined" margin="normal">
                 <InputLabel id="unit-label">Unit</InputLabel>
                 <Select
                   labelId="unit-label"
@@ -362,23 +258,6 @@ const Recipe = () => {
                   label="Unit"
                   value={unit}
                   onChange={(e) => setUnit(e.target.value)}
-                  sx={{
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                    },
-                  }}
                 >
                   <MenuItem value="piece(s)">piece(s)</MenuItem>
                   <MenuItem value="g">g</MenuItem>
@@ -402,21 +281,6 @@ const Recipe = () => {
                 className="input-field"
                 sx={{
                   marginBottom: "10px",
-                  "& .MuiInputLabel-root.Mui-focused": {
-                    color: "black",
-                    fontWeight: "bold",
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    "& fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#B81D33",
-                    },
-                  },
                 }}
               />
               <Button
@@ -457,21 +321,6 @@ const Recipe = () => {
               className="input-field"
               sx={{
                 marginBottom: "10px",
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "black",
-                  fontWeight: "bold",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#B81D33",
-                  },
-                },
               }}
             />
             <Button

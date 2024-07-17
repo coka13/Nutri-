@@ -12,6 +12,7 @@ import {
   InputLabel,
   MenuItem,
   Alert,
+  Card, CardContent,  Grid, Chip
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux"; // Import useSelector for accessing Redux state
 import "./NutriCalc.css";
@@ -113,12 +114,12 @@ const NutritiCalc = () => {
             <div
               className="modal-content"
               style={{
+                backgroundColor:darkMode?"black":"white",
                 position: "absolute",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
                 width: 400,
-                backgroundColor: "white",
                 boxShadow: 24,
                 p: 4,
               }}
@@ -147,23 +148,6 @@ const NutritiCalc = () => {
                   variant="outlined"
                   margin="normal"
                   required
-                  sx={{
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                    },
-                  }}
                 >
                   <InputLabel id="food-label">Select Food</InputLabel>
                   <Select
@@ -172,23 +156,7 @@ const NutritiCalc = () => {
                     label="Select Food"
                     value={selectedFood}
                     onChange={(e) => setSelectedFood(e.target.value)}
-                    sx={{
-                      "& .MuiInputLabel-root.Mui-focused": {
-                        color: "black",
-                        fontWeight: "bold",
-                      },
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          borderColor: "#B81D33",
-                        },
-                        "&:hover fieldset": {
-                          borderColor: "#B81D33",
-                        },
-                        "&.Mui-focused fieldset": {
-                          borderColor: "#B81D33",
-                        },
-                      },
-                    }}
+                   
                   >
                     {recipes?.length > 0 &&
                       recipes.map((r) => {
@@ -209,23 +177,7 @@ const NutritiCalc = () => {
                   variant="outlined"
                   margin="normal"
                   required
-                  sx={{
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                    },
-                  }}
+                  
                 />
                 <TextField
                   type="number"
@@ -236,23 +188,7 @@ const NutritiCalc = () => {
                   variant="outlined"
                   margin="normal"
                   required
-                  sx={{
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                    },
-                  }}
+                  
                 />
                 <TextField
                   type="number"
@@ -263,23 +199,7 @@ const NutritiCalc = () => {
                   variant="outlined"
                   margin="normal"
                   required
-                  sx={{
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                    },
-                  }}
+                  
                 />
                 <Button
                   type="submit"
@@ -305,12 +225,7 @@ const NutritiCalc = () => {
 
         <div className="nutrition-list">
           <NutritionCarousel />
-        {nutrition.map((nutri,index)=>{
-          return <NutritionCard
-          key={index}
-          nutritionItem={nutri} // Correct prop name to meal instead of nutrition
-          />
-        })}
+        
 
         </div>
       </div>
@@ -319,3 +234,4 @@ const NutritiCalc = () => {
 };
 
 export default NutritiCalc;
+
