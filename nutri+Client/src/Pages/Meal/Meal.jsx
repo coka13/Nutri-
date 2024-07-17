@@ -92,12 +92,8 @@ const Meal = () => {
     setRecipes(tempFood);
   };
   const handleAddNewRecipe = () => {
-    if (!selectedRecipe) {
-      return;
-    }
     const rec = dishes.find((r) => r._id === selectedRecipe);
     setRecipes([...recipes, rec]);
-    setSelectedRecipe();
   };
 
   return (

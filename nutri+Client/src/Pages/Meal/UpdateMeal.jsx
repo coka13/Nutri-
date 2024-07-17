@@ -70,14 +70,12 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
     setFood(tempFood);
   };
   const handleAddNewRecipe = () => {
-    if (!selectedRecipe) {
-      return;
-    }
+
 
     const rec = allRecipes.find((r) => r._id === selectedRecipe);
     console.log(rec, selectedRecipe);
     setFood({ ...food, recipes: [...food.recipes, rec] });
-    setSelectedRecipe();
+
   };
   return (
     <Modal
