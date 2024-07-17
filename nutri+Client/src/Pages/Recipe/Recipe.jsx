@@ -18,7 +18,6 @@ import { addRecipe, fetchAllRecipes } from "../store/slices/recipesSlice";
 import axios from "axios"; // Import Axios
 import RecipeCarousel from "../../Components/RecipeCarousel/RecipeCarousel";
 import "./Recipe.css";
-
 const Recipe = () => {
   const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");

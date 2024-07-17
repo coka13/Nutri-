@@ -24,6 +24,7 @@ import { fetchAllMeals } from "../store/slices/mealSlice";
 import { fetchAllRecipes } from "../store/slices/recipesSlice";
 const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
   const userId = useSelector((state) => state.auth.user._id);
+  const [errorMessage, setErrorMessage] = useState("");
   const allRecipes = useSelector((state) => state.recipes.recipes);
   const dispatch = useDispatch();
   const [food, setFood] = useState({});
@@ -39,6 +40,7 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
     setFood({ ...food, name:e.target.value });
   };
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
       const payload = { ...food, recipes: food.recipes.map((f) => f._id) };
       const response = await axios.put(
@@ -67,6 +69,8 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
     setFood(tempFood);
   };
   const handleAddNewRecipe = () => {
+    if(!selectedRecipe) {return;}
+
     const rec = allRecipes.find((r) => r._id === selectedRecipe);
     console.log(rec, selectedRecipe);
     setFood({ ...food, recipes: [...food.recipes, rec] });
