@@ -19,7 +19,6 @@ import axios from "axios"; // Import Axios
 import RecipeCarousel from "../../Components/RecipeCarousel/RecipeCarousel";
 import "./Recipe.css";
 
-
 const Recipe = () => {
   const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -35,12 +34,12 @@ const Recipe = () => {
   const [category, setCategory] = useState(""); // Added category state
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    dispatch(fetchAllRecipes())
-  },[])
+  useEffect(() => {
+    dispatch(fetchAllRecipes());
+  }, []);
 
   const recipes = useSelector((state) => state.recipes.recipes); // Redux state
-  console.log(recipes)
+  console.log(recipes);
 
   // Modal open and close functions
   const handleModalOpen = () => {
@@ -64,7 +63,7 @@ const Recipe = () => {
     setImage("");
     setDescription("");
     setErrorMessage("");
-    setCategory(""); 
+    setCategory("");
   };
 
   // Add ingredient to list
@@ -103,13 +102,16 @@ const Recipe = () => {
       instructions,
       image,
       description,
-      category
+      category,
     };
 
     try {
       // Send POST request to server
-      const response = await axios.post("http://localhost:3000/api/recipe/recipes", newRecipe);
-     
+      const response = await axios.post(
+        "http://localhost:3000/api/recipe/recipes",
+        newRecipe
+      );
+
       // Dispatch action to update Redux store
       dispatch(addRecipe(response.data));
 
@@ -250,12 +252,37 @@ const Recipe = () => {
                 },
               }}
             />
-            
 
             <FormControl
-                fullWidth
-                variant="outlined"
-                margin="normal"
+              fullWidth
+              variant="outlined"
+              margin="normal"
+              sx={{
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "black",
+                  fontWeight: "bold",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                },
+              }}
+            >
+              <InputLabel id="unit-label">Category</InputLabel>
+              <Select
+                required
+                labelId="categort-label"
+                id="category"
+                label="Category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 sx={{
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "black",
@@ -274,44 +301,11 @@ const Recipe = () => {
                   },
                 }}
               >
-                <InputLabel id="unit-label">Category</InputLabel>
-                <Select
-                required
-                  labelId="categort-label"
-                  id="category"
-                  label="Category"
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  sx={{
-                    "& .MuiInputLabel-root.Mui-focused": {
-                      color: "black",
-                      fontWeight: "bold",
-                    },
-                    "& .MuiOutlinedInput-root": {
-                      "& fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&:hover fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                      "&.Mui-focused fieldset": {
-                        borderColor: "#B81D33",
-                      },
-                    },
-                  }}
-                >
-                  <MenuItem value="starter">starter</MenuItem>
-                  <MenuItem value="main course">main course</MenuItem>
-                  <MenuItem value="dessert">dessert</MenuItem>
-       
-                </Select>
-              </FormControl>
-
-
-
-
-
-
+                <MenuItem value="starter">starter</MenuItem>
+                <MenuItem value="main course">main course</MenuItem>
+                <MenuItem value="dessert">dessert</MenuItem>
+              </Select>
+            </FormControl>
 
             <div className="ingredient-input">
               <TextField
@@ -445,10 +439,7 @@ const Recipe = () => {
               </Button>
             </div>
 
-
-            <List
-              sx={{ width: "100%", maxWidth: 360,  }}
-            >
+            <List sx={{ width: "100%", maxWidth: 360 }}>
               {ingredients.map((ingredient, index) => (
                 <ListItem key={index}>
                   <ListItemText
@@ -457,7 +448,6 @@ const Recipe = () => {
                 </ListItem>
               ))}
             </List>
-
 
             <TextField
               type="text"
@@ -503,9 +493,7 @@ const Recipe = () => {
             </Button>
 
             {/* Display added instructions */}
-            <List
-              sx={{ width: "100%", maxWidth: 360,  }}
-            >
+            <List sx={{ width: "100%", maxWidth: 360 }}>
               {instructions.map((instruction, index) => (
                 <ListItem key={index}>
                   <ListItemText primary={`${index + 1}. ${instruction}`} />
@@ -532,14 +520,10 @@ const Recipe = () => {
       </Modal>
 
       <div>
-<div className="recipe-carousel">
-      {recipes.length>0 && (
-    <RecipeCarousel recipes ={recipes} />
-   
-  )}
- </div>
-
-</div>
+        <div className="recipe-carousel">
+          {recipes.length > 0 && <RecipeCarousel recipes={recipes} />}
+        </div>
+      </div>
     </div>
   );
 };
