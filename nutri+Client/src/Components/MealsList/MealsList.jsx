@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import Typography from "@mui/material/Typography";
 import {
@@ -16,32 +16,36 @@ export default function MealsList({ dishes }) {
   const [error, setErrorMessage] = useState("");
 
   useEffect(() => {
-    setFetchedRecipes([])
+    setFetchedRecipes([]);
     fetchRecipes();
   }, []);
 
   const fetchRecipes = async () => {
-    const tempRecipes=[]
+    const tempRecipes = [];
     for (let i = 0; i < dishes.recipes.length; i++) {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/recipe/recipes/${dishes.recipes[i]}`
-        );
-        tempRecipes.push(response.data)
+        tempRecipes.push(dishes.recipes[i]);
       } catch (error) {
         console.error("Get recipes failed:", error);
         setErrorMessage("Failed to fetch recipes.");
       }
     }
-    setFetchedRecipes(tempRecipes)
+    setFetchedRecipes(tempRecipes);
   };
 
   // Separate dishes by category
-  const starters = useMemo(()=>fetchedRecipes.filter((dish) => dish.category === "starter"),[fetchedRecipes]);
-  const mainCourse = useMemo(()=>fetchedRecipes.filter((dish) => dish.category === "main course"),[fetchedRecipes]);
-  const dessert = useMemo(()=>fetchedRecipes.filter((dish) => dish.category === "desert"),[fetchedRecipes]);
-  
-
+  const starters = useMemo(
+    () => fetchedRecipes.filter((dish) => dish.category === "starter"),
+    [fetchedRecipes]
+  );
+  const mainCourse = useMemo(
+    () => fetchedRecipes.filter((dish) => dish.category === "main course"),
+    [fetchedRecipes]
+  );
+  const dessert = useMemo(
+    () => fetchedRecipes.filter((dish) => dish.category === "desert"),
+    [fetchedRecipes]
+  );
 
   return (
     <div>
@@ -51,7 +55,7 @@ export default function MealsList({ dishes }) {
           <Typography variant="h6" component="h2" gutterBottom>
             Starters
           </Typography>
-          <List sx={{ width: "100%",  }}>
+          <List sx={{ width: "100%" }}>
             {starters.map((dish, index) => (
               <React.Fragment key={dish._id}>
                 <ListItem alignItems="flex-start">
@@ -89,7 +93,7 @@ export default function MealsList({ dishes }) {
           <Typography variant="h6" component="h2" gutterBottom>
             Main Course
           </Typography>
-          <List sx={{ width: "100%",  }}>
+          <List sx={{ width: "100%" }}>
             {mainCourse.map((dish, index) => (
               <React.Fragment key={dish._id}>
                 <ListItem alignItems="flex-start">
@@ -127,7 +131,7 @@ export default function MealsList({ dishes }) {
           <Typography variant="h6" component="h2" gutterBottom>
             Dessert
           </Typography>
-          <List sx={{ width: "100%",  }}>
+          <List sx={{ width: "100%" }}>
             {dessert.map((dish, index) => (
               <React.Fragment key={dish._id}>
                 <ListItem alignItems="flex-start">

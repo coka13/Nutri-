@@ -8,12 +8,13 @@ import {
   FormControl,
   InputLabel,
   Card,
-  CardMedia,TextField,
+  CardMedia,
+  TextField,
   List,
   ListItemText,
   ListItem,
   ListItemAvatar,
-  Avatar
+  Avatar,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import MealList from "../../Components/MealList/MealList";
@@ -36,11 +37,11 @@ const Meal = () => {
   const [recipes, setRecipes] = useState([]);
   const meals = useSelector((state) => state.meals.meals);
   const dishes = useSelector((state) => state.recipes.recipes);
-  const user= useSelector((state) => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllRecipes());
-    dispatch(fetchAllMeals(user._id));
+    dispatch(fetchAllMeals());
   }, []);
   const handleModalOpen = () => {
     setOpenModal(true);
@@ -51,19 +52,22 @@ const Meal = () => {
     setSelectedDish(null);
   };
 
-  const handleSubmit =async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = { name:foodName,  user: user._id, recipes: recipes.map((f) => f._id) };
+      const payload = {
+        name: foodName,
+        user: user._id,
+        recipes: recipes.map((f) => f._id),
+      };
       const response = await axios.post(
         `http://localhost:3000/api/meal/meals`,
         payload
       );
       dispatch(fetchAllMeals());
       setOpenModal(false); // Close the modal
-   
     } catch (error) {
-      console.log("Error occured",error)
+      console.log("Error occured", error);
       if (error.response) {
         if (error.response.status === 409) {
           setErrorMessage("Meal already exists. Please try again.");
@@ -86,9 +90,11 @@ const Meal = () => {
     setRecipes(tempFood);
   };
   const handleAddNewRecipe = () => {
-    if(!selectedRecipe) {return;}
+    if (!selectedRecipe) {
+      return;
+    }
     const rec = dishes.find((r) => r._id === selectedRecipe);
-    setRecipes([...recipes, rec] );
+    setRecipes([...recipes, rec]);
     setSelectedRecipe();
   };
 
@@ -108,43 +114,57 @@ const Meal = () => {
         }}
         onClick={handleModalOpen}
       >
-        Add Food
+        Add Meal
       </Button>
 
       <Modal
-      open={openModal}
-      onClose={handleModalClose}
-      aria-labelledby="food-details-modal"
-      aria-describedby="modal-for-entering-food-details"
-      BackdropProps={{
-        invisible: true, // Hides the backdrop
-      }}  
-    >
-      <div className="modal-content">
-        <Typography
-          variant="h6"
-          component="h2"
-          gutterBottom
-          className="modal-title"
-        >
-          Add Food
-        </Typography>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Food Name"
-            value={foodName ?? ""}
-            onChange={e=>setFoodName(e.target.value)}
-            fullWidth
-          />
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <FormControl fullWidth variant="outlined" margin="normal">
-              <InputLabel id="food-name-label">Add Recipe</InputLabel>
-              <Select
-                value={selectedRecipe}
-                onChange={(e) => setSelectedRecipe(e.target.value)}
-                labelId="food-name-label"
-                label="Food Name"
-                required
+        open={openModal}
+        onClose={handleModalClose}
+        aria-labelledby="food-details-modal"
+        aria-describedby="modal-for-entering-food-details"
+        BackdropProps={{
+          invisible: true, // Hides the backdrop
+        }}
+      >
+        <div className="modal-content">
+          <Typography
+            variant="h6"
+            component="h2"
+            gutterBottom
+            className="modal-title"
+          >
+            Add Meal
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Food Name"
+              value={foodName ?? ""}
+              onChange={(e) => setFoodName(e.target.value)}
+              fullWidth
+              sx={{
+                marginBottom: "10px",
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "black",
+                  fontWeight: "bold",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                },
+              }}
+            />
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                margin="normal"
                 sx={{
                   "& .MuiInputLabel-root.Mui-focused": {
                     color: "black",
@@ -163,67 +183,92 @@ const Meal = () => {
                   },
                 }}
               >
-                {dishes.map((dish) => (
-                  <MenuItem key={dish._id} value={dish._id}>
-                    {dish.recipeName}
-                  </MenuItem>
+                <InputLabel id="food-name-label">Add Recipe</InputLabel>
+                <Select
+                  value={selectedRecipe}
+                  onChange={(e) => setSelectedRecipe(e.target.value)}
+                  labelId="food-name-label"
+                  label="Food Name"
+                  required
+                  sx={{
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "black",
+                      fontWeight: "bold",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      "& fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "#B81D33",
+                      },
+                    },
+                  }}
+                >
+                  {dishes.map((dish) => (
+                    <MenuItem key={dish._id} value={dish._id}>
+                      {dish.recipeName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <AddIcon fontSize="large" onClick={handleAddNewRecipe} />
+            </div>
+            <List sx={{ width: "100%" }}>
+              {recipes?.length > 0 &&
+                recipes.map((dish, index) => (
+                  <React.Fragment key={dish._id}>
+                    <ListItem alignItems="flex-start">
+                      <ListItemAvatar>
+                        <Avatar alt={dish.recipeName} src={dish.image} />
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={dish.recipeName}
+                        secondary={
+                          <React.Fragment>
+                            <Typography
+                              sx={{ display: "inline" }}
+                              component="span"
+                              variant="body2"
+                              color="text.primary"
+                            >
+                              {dish.description}
+                            </Typography>
+                          </React.Fragment>
+                        }
+                      />
+                      <CloseIcon onClick={() => handleDeleteRecipe(index)} />
+                    </ListItem>
+                  </React.Fragment>
                 ))}
-              </Select>
-            </FormControl>
-            <AddIcon fontSize="large" onClick={handleAddNewRecipe} />
-          </div>
-          <List sx={{ width: "100%",  }}>
-            {recipes?.length > 0 &&
-             recipes.map((dish, index) => (
-                <React.Fragment key={dish._id}>
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar alt={dish.recipeName} src={dish.image} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={dish.recipeName}
-                      secondary={
-                        <React.Fragment>
-                          <Typography
-                            sx={{ display: "inline" }}
-                            component="span"
-                            variant="body2"
-                            color="text.primary"
-                          >
-                            {dish.description}
-                          </Typography>
-                        </React.Fragment>
-                      }
-                    />
-                    <CloseIcon onClick={() => handleDeleteRecipe(index)} />
-                  </ListItem>
-                </React.Fragment>
-              ))}
-          </List>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{
-              marginTop: "10px",
-              marginBottom: "10px",
-              backgroundColor: "#B81D33",
-              "&:hover": {
+            </List>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{
+                marginTop: "10px",
+                marginBottom: "10px",
                 backgroundColor: "#B81D33",
-              },
-            }}
-          >
-            Add Meal
-          </Button>
-        </form>
-      </div>
-    </Modal>
-     
+                "&:hover": {
+                  backgroundColor: "#B81D33",
+                },
+              }}
+            >
+              Add Meal
+            </Button>
+          </form>
+        </div>
+      </Modal>
+
       <div className="meal-list">
         <MealList setDishes={setFoodList} dishes={foodList} />
       </div>
       <MealCarousel meals={meals} />
-       </div>
+    </div>
   );
 };
 

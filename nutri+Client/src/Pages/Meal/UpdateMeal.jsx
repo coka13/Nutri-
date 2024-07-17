@@ -37,7 +37,7 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
   };
 
   const handleFoodNameChange = (e) => {
-    setFood({ ...food, name:e.target.value });
+    setFood({ ...food, name: e.target.value });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -69,7 +69,9 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
     setFood(tempFood);
   };
   const handleAddNewRecipe = () => {
-    if(!selectedRecipe) {return;}
+    if (!selectedRecipe) {
+      return;
+    }
 
     const rec = allRecipes.find((r) => r._id === selectedRecipe);
     console.log(rec, selectedRecipe);
@@ -84,7 +86,7 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
       aria-describedby="modal-for-entering-food-details"
       BackdropProps={{
         invisible: true, // Hides the backdrop
-      }}  
+      }}
     >
       <div className="modal-content">
         <Typography
@@ -93,7 +95,7 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
           gutterBottom
           className="modal-title"
         >
-          Update Food
+          Update Meal
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -101,9 +103,48 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
             value={food?.name ?? ""}
             onChange={handleFoodNameChange}
             fullWidth
+            sx={{
+              marginBottom: "10px",
+              "& .MuiInputLabel-root.Mui-focused": {
+                color: "black",
+                fontWeight: "bold",
+              },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": {
+                  borderColor: "#B81D33",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#B81D33",
+                },
+                "&.Mui-focused fieldset": {
+                  borderColor: "#B81D33",
+                },
+              },
+            }}
           />
           <div style={{ display: "flex", alignItems: "center" }}>
-            <FormControl fullWidth variant="outlined" margin="normal">
+            <FormControl
+              fullWidth
+              variant="outlined"
+              margin="normal"
+              sx={{
+                "& .MuiInputLabel-root.Mui-focused": {
+                  color: "black",
+                  fontWeight: "bold",
+                },
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#B81D33",
+                  },
+                },
+              }}
+            >
               <InputLabel id="food-name-label">Add Recipe</InputLabel>
               <Select
                 value={selectedRecipe}
@@ -138,7 +179,7 @@ const UpdateMeal = ({ openModal, handleModalClose, meal }) => {
             </FormControl>
             <AddIcon fontSize="large" onClick={handleAddNewRecipe} />
           </div>
-          <List sx={{ width: "100%",  }}>
+          <List sx={{ width: "100%" }}>
             {food?.recipes?.length > 0 &&
               food.recipes.map((dish, index) => (
                 <React.Fragment key={dish._id}>

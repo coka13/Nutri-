@@ -11,7 +11,8 @@ import { Link as RouterLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkModeState } from "../../Pages/store/slices/darkMode";
 import { logout } from "../../Pages/store/slices/authSlice";
-
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 const CustomDrawer = ({ list, links }) => {
   const [open, setOpen] = useState(false);
@@ -28,13 +29,17 @@ const CustomDrawer = ({ list, links }) => {
 
   const handleLogout = () => {
     dispatch(logout()); // Dispatch the logout action
+    dispatch(toggleDarkModeState());
     setOpen(false); // Close the drawer after logout
   };
 
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-      <Button onClick={toggleDarkMode} sx={{ marginTop: "10px", color: "black" }}>
-        {darkMode ? "Light Mode" : "Dark Mode"}
+      <Button  sx={{ marginTop: "10px", color: !darkMode ? "black" : "white" }}>
+        {darkMode ? 
+        <IconButton onClick={toggleDarkMode}><LightModeIcon/> </IconButton>:
+        <IconButton onClick={toggleDarkMode}><DarkModeIcon/> </IconButton>
+        }
       </Button>
       <MuiLink component={RouterLink} to="/home" underline="none" sx={{ color: darkMode ? "black" : "white" }}>
         <Avatar sx={{ marginTop: "10px", width: "100%", height: "50%" }} src="logo2.png" />

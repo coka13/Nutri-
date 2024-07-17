@@ -20,6 +20,7 @@ import { fetchAllShoppingLists } from "../store/slices/shoppingSlice";
 import "./Shopping.css";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
+import { fetchAllMeals } from "../store/slices/mealSlice";
 
 const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
   console.log(shopping);
@@ -30,6 +31,7 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
   const darkMode = useSelector((state) => state.darkMode.darkMode);
   const userID = useSelector((state) => state.auth.user._id);
   const recipes = useSelector((state) => state.recipes.recipes);
+  const meals = useSelector((state) => state.meals.meals);
 
   const dispatch = useDispatch();
 
@@ -38,8 +40,12 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
     e.preventDefault();
     try {
       const items = [...ingredients];
-      selectedShoppingList.forEach((rec) => {
-        items.push(rec.ingredients);
+      selectedShoppingList.forEach((meal) => {
+        meal?.recipes.forEach((rec)=>{
+          rec?.ingredients.forEach((ing)=>{
+            items.push({ingredient:ing.ingredient,quantity:ing.quantity,unit:ing.unit});
+          })
+        })
       });
 
       const res = await axios.put(
@@ -58,13 +64,14 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
 
   // Fetch all shopping lists for the user
   useEffect(() => {
-    dispatch(fetchAllRecipes());
+    // dispatch(fetchAllRecipes());
+    dispatch(fetchAllMeals());
     dispatch(fetchAllShoppingLists());
   }, []);
 
   const handleFoodSelection = () => {
     const tempList = [...selectedShoppingList];
-    tempList.push(recipes.find((recipe) => recipe._id === selectedFood));
+    tempList.push(meals.find((meal) => meal._id === selectedFood));
     setSelectedShoppingList(tempList);
   };
 
@@ -97,7 +104,7 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
           gutterBottom
           className="modal-title"
         >
-          Update Food Details
+          Update Shopping List Details
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -152,7 +159,7 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
                 },
               }}
             >
-              <InputLabel id="food-label">Select Food</InputLabel>
+              <InputLabel id="food-label">Select Meal</InputLabel>
               <Select
                 labelId="food-label"
                 id="food"
@@ -177,10 +184,10 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
                   },
                 }}
               >
-                {recipes?.length > 0 &&
-                  recipes.map((r) => {
-                    return <MenuItem value={r._id}>{r.recipeName}</MenuItem>;
-                  })}
+                {meals?.length > 0 &&
+                    meals.map((r) => {
+                      return <MenuItem value={r._id}>{r.name}</MenuItem>;
+                    })}
               </Select>
             </FormControl>
             <AddIcon fontSize="large" onClick={handleFoodSelection} />
@@ -201,15 +208,17 @@ const UpdateShopping = ({ openModal, handleModalClose, shopping }) => {
                           }}
                         >
                           <span style={{ color: darkMode ? "#fff" : "black" }}>
-                            {food.recipeName}
+                          {food.name}
                           </span>
                           <CloseIcon onClick={() => handleFoodRemove(index)} />
                         </div>
                       }
                       secondary={
                         <span style={{ color: darkMode ? "white" : "grey" }}>
-                          {food.ingredients.map((ing) => {
-                            return `${ing.ingredient} ${ing.quantity} ${ing.unit}`;
+                          {food.recipes.map(({ingredients}) => {
+                            return ingredients.map((ing) => {
+                              return `${ing.ingredient} ${ing.quantity} ${ing.unit}`;
+                            });
                           })}
                         </span>
                       }

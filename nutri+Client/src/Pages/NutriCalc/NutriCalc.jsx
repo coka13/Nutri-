@@ -19,6 +19,7 @@ import { fetchAllRecipes } from "../store/slices/recipesSlice";
 import axios from "axios";
 import { fetchAllNutrition } from "../store/slices/nutritionSlice";
 import NutritionCarousel from "../../Components/NutritionCarousel/NutritionCarousel";
+import NutritionCard from "../../Components/NutritionCard/NutritionCard";
 
 const NutritiCalc = () => {
   const [selectedFood, setSelectedFood] = useState("");
@@ -32,6 +33,7 @@ const NutritiCalc = () => {
   const darkMode = useSelector((state) => state.darkMode.darkMode);
   const recipes = useSelector((state) => state.recipes.recipes);
   const userID = useSelector((state) => state.auth.user._id);
+  const nutrition = useSelector((state) => state.nutrition.nutrition);
   const [errorMessage, setErrorMessage] = useState("");
   useEffect(() => {
     dispatch(fetchAllRecipes());
@@ -292,15 +294,24 @@ const NutritiCalc = () => {
                     },
                   }}
                 >
-                  Add Food
+                  Add Nutrition
                 </Button>
               </form>
             </div>
           </Modal>
         )}
 
+        
+
         <div className="nutrition-list">
           <NutritionCarousel />
+        {nutrition.map((nutri,index)=>{
+          return <NutritionCard
+          key={index}
+          nutritionItem={nutri} // Correct prop name to meal instead of nutrition
+          />
+        })}
+
         </div>
       </div>
     </div>

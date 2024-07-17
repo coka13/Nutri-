@@ -3,7 +3,7 @@ import { MealModel } from "../models/mealModel.js";
 export const createMeal = (meal) => MealModel.create(meal);
 
 export const getAllMealsByUserService = (userId) => {
-  return MealModel.find({ user: userId });
+  return MealModel.find({ user: userId }).populate('recipes').exec();
 };
 
 export const getMealByName = (userID, mealName,recipes) =>
