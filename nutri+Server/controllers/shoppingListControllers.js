@@ -14,7 +14,7 @@ import {
         return res.status(409).json({ error: "ShoppingList already exists" });
       }
   
-      const shoppingList = await createShoppingList(req.body);
+      const shoppingList = await createShoppingList({user:userId,...req.body});
       res.status(201).json(shoppingList);
     } catch (error) {
       res.status(500).json({ error: error.message });
