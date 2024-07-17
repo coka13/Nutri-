@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   FormControl,
   InputLabel,
@@ -30,6 +31,7 @@ const Shopping = () => {
   const darkMode = useSelector((state) => state.darkMode.darkMode);
   const userID = useSelector((state) => state.auth.user._id);
   const meals = useSelector((state) => state.meals.meals);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const dispatch = useDispatch();
   // Modal handlers
@@ -45,6 +47,9 @@ const Shopping = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (selectedShoppingList.length == 0) {
+        return setErrorMessage('Please add atleast one meal');
+      }
       const items = [];
       selectedShoppingList.forEach((meal) => {
         meal?.recipes.forEach((rec) => {
@@ -146,6 +151,11 @@ const Shopping = () => {
             >
               Enter Shopping List Details
             </Typography>
+            {errorMessage && (
+              <Alert severity="error" onClose={() => setErrorMessage("")}>
+                {errorMessage}
+              </Alert>
+            )}
             <form onSubmit={handleSubmit}>
               <TextField
                 required
