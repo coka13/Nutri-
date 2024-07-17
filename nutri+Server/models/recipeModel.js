@@ -36,6 +36,11 @@ const recipeSchema = new mongoose.Schema({
     type: [String], 
     required: true,
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 export const RecipeModel = mongoose.model("Recipe", recipeSchema);
