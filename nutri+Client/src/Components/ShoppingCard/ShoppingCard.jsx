@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import axios from "axios";
 import ShoppingsList from "../ShoppingsList/ShoppingsList";
 import { fetchAllShoppingLists } from "../../Pages/store/slices/shoppingSlice";
+import UpdateShopping from "../../Pages/Shopping/UpdateShopping";
 
 export default function ShoppingCard({ shoppingItem }) {
   const dispatch = useDispatch();
@@ -75,15 +76,15 @@ export default function ShoppingCard({ shoppingItem }) {
           justifyContent: "center",
         }}
       ></CardActions>
-      {/* {updateModal && (
-        <UpdateMeal
-          shopping={shopping}
+      {updateModal && (
+        <UpdateShopping
+          shopping={shoppingItem}
           openModal={updateModal}
           handleModalClose={() => {
             setUpdateModal(!updateModal);
           }}
         />
-      )} */}
+      )}
     </Card>
   );
 }

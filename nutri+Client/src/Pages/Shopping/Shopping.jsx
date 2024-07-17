@@ -97,7 +97,7 @@ const Shopping = () => {
         }}
         onClick={handleModalOpen}
       >
-        Add Food
+        Add Shopping List
       </Button>
 
       <Modal
