@@ -13,19 +13,28 @@ import Meal from './Pages/Meal/Meal';
 import Footer from './Components/Footer/Footer';
 import { useSelector } from 'react-redux';
 import CustomRoute from './Components/CustomRoute/CustomRoute';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 function App() {
   const location = useLocation();
   const noDrawer = ['/', '/register'];
   const auth = useSelector((state) => state.auth);
+  const darkMode = useSelector((state) => state.darkMode.darkMode);
 
   const shouldRenderDrawer = !noDrawer.includes(location.pathname);
 
   console.log('Current Path:', location.pathname);
   console.log('User Logged In:', auth.loggedIn);
   console.log('Should Render Drawer:', shouldRenderDrawer);
-
+  const theme = createTheme({
+    palette: {
+      mode: darkMode ? 'dark' : 'light',
+    },
+  });
   return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
     <div className="app-container">
       {shouldRenderDrawer && auth.loggedIn && (
         <CustomDrawer list={['Share a Recipe', 'Plan a Meal', 'Shopping List', 'Nutritional Calculator']} links={["/recipe","/meal","/shopping","/nutrition"]} />
@@ -80,6 +89,8 @@ function App() {
       </div>
       <Footer />
     </div>
+    </ThemeProvider>
+
   );
 }
 

@@ -97,19 +97,7 @@ export function RecipeCarousel({ recipes }) {
           )}
         </Button>
       </Box>
-      <Paper
-        square
-        elevation={0}
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 50,
-          pl: 2,
-          bgcolor: 'transparent',
-          marginBottom: 2, // Add some margin between the title and the carousel
-        }}
-      >
-      </Paper>
+     
       <SwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={activeStep}

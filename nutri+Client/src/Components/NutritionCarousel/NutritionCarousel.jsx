@@ -95,20 +95,6 @@ export function NutritionCarousel() {
           )}
         </Button>
       </Box>
-      <Paper
-        square
-        elevation={0}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          height: 50,
-          pl: 2,
-          bgcolor: "background.default",
-          marginBottom: 2, // Add some margin between the title and the carousel
-        }}
-      >
-        {/* Title or other content */}
-      </Paper>
       {nutrition?.length > 0 && (
         <SwipeableViews
           axis={theme.direction === "rtl" ? "x-reverse" : "x"}

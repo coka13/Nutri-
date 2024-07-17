@@ -1,30 +1,25 @@
-import React, { useState } from "react";
-import {
-  Button,
-  Modal,
-  TextField,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Alert,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  IconButton,
-  Grid,
-} from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import { addRecipe, fetchAllRecipes } from "../store/slices/recipesSlice";
-import axios from "axios"; // Import Axios
-import RecipeCarousel from "../../Components/RecipeCarousel/RecipeCarousel";
-import "./Recipe.css";
-import { useFormik, FormikProvider, Form, Field, FieldArray } from "formik";
-import FormikTextField from "../../Components/Form/FormikTextField";
-import FormikSelect from "../../Components/Form/FormikSelectField";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import {
+  Alert,
+  Button,
+  FormControl,
+  Grid,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
+  Typography
+} from "@mui/material";
+import axios from "axios"; // Import Axios
+import { Field, FieldArray, Form, FormikProvider, useFormik } from "formik";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import FormikSelect from "../../Components/Form/FormikSelectField";
+import FormikTextField from "../../Components/Form/FormikTextField";
+import { fetchAllRecipes } from "../store/slices/recipesSlice";
+import "./Recipe.css";
 const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
   // const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -150,7 +145,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                       <Grid container spacing={2}>
                         <Grid item xs={4} key={index}>
                           <Field
-                          required
+                            required
                             component={TextField}
                             type="text"
                             name={`ingredients[${index}].ingredient`}
@@ -188,7 +183,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                         </Grid>
                         <Grid item xs={3}>
                           <FormControl
-                          required
+                            required
                             fullWidth
                             variant="outlined"
                             margin="normal"
@@ -255,7 +250,7 @@ const UpdateRecipe = ({ recipe, openModal, setOpenModal }) => {
                         </Grid>
                         <Grid item xs={3}>
                           <Field
-                          required
+                            required
                             component={TextField}
                             type="number"
                             name={`ingredients[${index}].quantity`}
