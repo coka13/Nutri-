@@ -92,7 +92,7 @@ const Meal = () => {
     setSelectedDish(selectedRecipe);
   };
   const handleDeleteRecipe = (index) => {
-    const tempFood = { ...recipes };
+    const tempFood = [ ...recipes ];
     tempFood.splice(index, 1);
     setRecipes(tempFood);
   };

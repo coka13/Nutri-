@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import CustomCard from "../../Components/CustomCard/CustomCard";
-import { Alert, Box, Button, Link, TextField } from "@mui/material";
+import { Alert, Box, Button,  TextField } from "@mui/material";
 import axios from "axios";
 import "./RegisterPage.css";
 import { BACKEND_URL } from "../../config/config";
-
+import CircularProgress from '@mui/material/CircularProgress';
+import { Link } from "react-router-dom";
 const RegisterPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -36,6 +38,7 @@ const RegisterPage = () => {
 
 
     try {
+      setLoading(true)
       const response = await axios.post(`${BACKEND_URL}/api/user/register`, {
         username:username.toLowerCase(),
         password,
@@ -59,6 +62,8 @@ const RegisterPage = () => {
         newErrors.push("Something went wrong");
       }
       setErrors(newErrors);
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -202,11 +207,13 @@ const RegisterPage = () => {
                   backgroundColor: "#B81D33",
                 },
               }}
+              disabled={loading}
+              endIcon={loading ? <CircularProgress sx={{color:"white"}} size={24} /> : null}
             >
-              Register
+              {loading?"Loading...":"Register"}
             </Button>
           </div>
-          <Link href="/">Already registered? Go to Login!</Link>
+          <Link to="/">Already registered? Go to Login!</Link>
         </Box>
       </CustomCard>
     </div>

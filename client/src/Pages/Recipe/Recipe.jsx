@@ -12,8 +12,9 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  IconButton,
 } from "@mui/material";
-``;
+import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
 import { addRecipe, fetchAllRecipes } from "../store/slices/recipesSlice";
 import axios from "axios"; // Import Axios
@@ -86,7 +87,12 @@ const Recipe = () => {
       setInstruction("");
     }
   };
-
+  const handleRemoveInstruction=(index)=>{
+    setInstructions(instructions.filter((_, i) => i!== index));
+  }
+  const handleRemoveIngredient=(index)=>{
+    setIngredients(ingredients.filter((_, i) => i!== index));
+  }
   // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -299,6 +305,7 @@ const Recipe = () => {
                     backgroundColor: "#B81D33",
                   },
                 }}
+                disabled={quantity==="" ||ingredient==="" ||unit===""}
               >
                 Add Ingredient
               </Button>
@@ -310,6 +317,15 @@ const Recipe = () => {
                   <ListItemText
                     primary={`${ingredient.ingredient}, ${ingredient.quantity} ${ingredient.unit}`}
                   />
+                   <IconButton>
+                    <DeleteIcon
+                      onClick={() => handleRemoveIngredient(index)}
+                      sx={{
+                        cursor: "pointer",
+                        color: darkMode? "white" : "black",
+                      }}
+                    />
+                  </IconButton>
                 </ListItem>
               ))}
             </List>
@@ -338,6 +354,7 @@ const Recipe = () => {
                   backgroundColor: "#B81D33",
                 },
               }}
+              disabled={instruction===""}
             >
               Add Instruction
             </Button>
@@ -347,6 +364,15 @@ const Recipe = () => {
               {instructions.map((instruction, index) => (
                 <ListItem key={index}>
                   <ListItemText primary={`${index + 1}. ${instruction}`} />
+                  <IconButton>
+                    <DeleteIcon
+                      onClick={() => handleRemoveInstruction(index)}
+                      sx={{
+                        cursor: "pointer",
+                        color: darkMode? "white" : "black",
+                      }}
+                    />
+                  </IconButton>
                 </ListItem>
               ))}
             </List>

@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import CustomCard from "../../Components/CustomCard/CustomCard";
-import { Alert, Box, Button, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button,  TextField, Typography } from "@mui/material";
 import "./LoginPage.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/slices/authSlice";
 import axios from "axios"; // Import axios
 import { BACKEND_URL } from "../../config/config";
+import CircularProgress from '@mui/material/CircularProgress';
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setErrorMessage] = useState("");
   const dispatch = useDispatch();
 
@@ -19,6 +22,7 @@ const LoginPage = () => {
     event.preventDefault();
 
     try {
+      setLoading(true)
       const response = await axios.post(
         `${BACKEND_URL}/api/user/login`,
         { username:username.toLowerCase(), password },
@@ -48,6 +52,8 @@ const LoginPage = () => {
       } else {
         setErrorMessage("An error occurred. Please try again later.");
       }
+    }finally{
+      setLoading(false)
     }
   };
 
@@ -138,11 +144,13 @@ const LoginPage = () => {
                     backgroundColor: "#B81D33",
                   },
                 }}
+                endIcon={loading ? <CircularProgress sx={{color:"white"}} size={24} /> : null}
+                disabled={loading}
               >
-                Login
+                {loading?"Loading ...":"Login"}
               </Button>
             </div>
-            <Link href="/register">Not registered yet? Go to Register!</Link>
+            <Link to="/register">Not registered yet? Go to Register!</Link>
           </Box>
         </CustomCard>
       </div>

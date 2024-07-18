@@ -98,7 +98,7 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
               id="food"
               label="Select Food"
               value={selectedFood}
-              onChange={(e) => setSelectedFood(e.target.value)}
+              onChange={(e) => {if(parseInt(e.target.value) >=0 || e.target.value=="")setSelectedFood(e.target.value)}}
             >
               {recipes?.length > 0 &&
                 recipes.map((r) => {
@@ -113,17 +113,18 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
           <TextField
             type="number"
             value={calories}
-            onChange={(e) => setCalories(e.target.value)}
+            onChange={(e) => {if(parseInt(e.target.value) >=0 || e.target.value=="")setCalories(e.target.value)}}
             label="Calories"
             fullWidth
             variant="outlined"
             margin="normal"
             required
+            min='0'
           />
           <TextField
             type="number"
             value={totalFat}
-            onChange={(e) => setTotalFat(e.target.value)}
+            onChange={(e) => {if(parseInt(e.target.value) >=0 || e.target.value=="")setTotalFat(e.target.value)}}
             label="Total Fat"
             fullWidth
             variant="outlined"
@@ -133,7 +134,7 @@ const UpdateNutrition = ({ nutrition, openModal, handleModalClose }) => {
           <TextField
             type="number"
             value={protein}
-            onChange={(e) => setProtein(e.target.value)}
+            onChange={(e) => {if(parseInt(e.target.value)>=0)setProtein(e.target.value)}}
             label="Protein"
             fullWidth
             variant="outlined"

@@ -1,1 +1,1 @@
-export const BACKEND_URL="https://nutri-06xu.onrender.com";
+export const BACKEND_URL=import.meta.env.BACKEND_URL;
