@@ -1,0 +1,1 @@
+export const BACKEND_URL="https://nutri-06xu.onrender.com";
